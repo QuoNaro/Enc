@@ -187,6 +187,7 @@ pyrightconfig.json
 pyvenv.cfg
 pip-selfcheck.json
 
+postgres_data
 ### Vue ###
 # gitignore template for Vue.js projects
 #
