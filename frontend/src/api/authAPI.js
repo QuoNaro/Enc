@@ -1,14 +1,12 @@
-// src/api/authApi.js
-import axios from 'axios';
+// src/AuthAPI.js
+import ky from 'ky';
 
-const BASE_URL = 'http://localhost:8000'; // URL вашего FastAPI сервера
-
-const authApi = axios.create({
-  baseURL: BASE_URL,
+const apiClient = ky.create({
+  prefixUrl: 'http://localhost:8000', // Базовый URL бэкенда
+  timeout: 10000, // Таймаут запроса (опционально)
   headers: {
-    'Content-Type': 'application/x-www-form-urlencoded',
+    'Content-Type': 'application/json', // Заголовок для JSON
   },
 });
 
-// Экспортируйте экземпляр Axios
-export default authApi;
+export default apiClient;

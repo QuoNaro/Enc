@@ -10,9 +10,9 @@
       <p v-if="message">{{ message }}</p>
     </div>
   </template>
-  
+
   <script>
-  import authApi from '../api/authAPI';
+  import apiClient from '../api/authAPI'; // Импортируем HTTP-клиент
   
   export default {
     data() {
@@ -25,38 +25,47 @@
     },
     methods: {
       async signup() {
-  // Валидация данных
-  if (!this.username || !this.email || !this.password) {
-    this.message = 'All fields are required.';
-    return;
-  }
-
-  if (this.password.length < 6) {
-    this.message = 'Password must be at least 6 characters long.';
-    return;
-  }
-
-  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailPattern.test(this.email)) {
-    this.message = 'Invalid email format.';
-    return;
-  }
-
-  const jsonString = JSON.stringify({
-  username: this.username,
-  email: this.email,
-  password: this.password,
-  });
-
-  const response = await axios.post('/signup', jsonString, {
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  });
-}}}
-
+        // Валидация данных
+        if (!this.username || !this.email || !this.password) {
+          this.message = 'All fields are required.';
+          return;
+        }
+        if (this.password.length < 6) {
+          this.message = 'Password must be at least 6 characters long.';
+          return;
+        }
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailPattern.test(this.email)) {
+          this.message = 'Invalid email format.';
+          return;
+        }
   
-
+        // Формируем данные для отправки
+        const requestData = {
+          username: this.username,
+          email: this.email,
+          password: this.password,
+        };
+  
+        try {
+          // Отправляем POST-запрос на бэкенд
+          const response = await apiClient.post('signup', { json: requestData });
+          const responseData = await response.json();
+          this.message = 'Signup successful!';
+          console.log(responseData);
+        } catch (error) {
+          // Обработка ошибок
+          if (error.response) {
+            const errorData = await error.response.json();
+            this.message = errorData.message || 'An error occurred during signup.';
+          } else {
+            this.message = 'Network error or server is unreachable.';
+          }
+          console.error('Error during signup:', error);
+        }
+      },
+    },
+  };
   </script>
   
   <style scoped>

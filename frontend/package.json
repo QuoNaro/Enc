@@ -1,14 +1,12 @@
 {
   "dependencies": {
-    "@vue/cli": "^5.0.8",
-    "axios": "^1.7.9",
+    "ky": "^1.7.4",
     "vue-router": "^4.5.0"
   },
-  "name": "frontend",
-  "version": "1.0.0",
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
   },
   "devDependencies": {
     "@vue/cli-service": "^5.0.8"
