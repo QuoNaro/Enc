@@ -1,44 +1,37 @@
+// src/router/index.js
 import { createRouter, createWebHistory } from 'vue-router';
 import Home from '@/components/Home.vue';
 import Login from '@/components/Login.vue';
 import Signup from '@/components/Signup.vue';
-
+import { isAuthenticated } from '@/services/AuthAPI'; // Импортируем функцию проверки аутентификации
 
 const routes = [
   {
     path: '/home',
     name: 'Home',
     component: Home,
-    meta : {requiresAuth : true},
+    meta: { requiresAuth: true }, // Защищённая страница
   },
   {
     path: '/login',
     name: 'Login',
     component: Login,
-    
   },
   {
-    path: '/signup', 
+    path: '/signup',
+    name: 'Signup',
     component: Signup,
-    name: 'Signup', 
   },
-
 ];
-
-
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
 });
 
-const isAuthenticated = () => {
-  // Проверяем наличие токена в localStorage
-  return !!localStorage.getItem('access_token');
-};
-
+// Глобальная навигационная гвардия
 router.beforeEach((to, from, next) => {
-  if (to.meta.requiresAuth && !isAuthenticated) {
+  if (to.meta.requiresAuth && !isAuthenticated()) {
     next({ name: 'Login' }); // Редирект на страницу логина
   } else {
     next(); // Продолжить навигацию
@@ -46,4 +39,3 @@ router.beforeEach((to, from, next) => {
 });
 
 export default router;
-
