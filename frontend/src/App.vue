@@ -1,15 +1,11 @@
 <template>
   <div id="app">
-    <router-view /> <!-- Здесь будет отображаться текущий компонент -->
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'App',
+  name: 'App'
 };
 </script>
-
-<style>
-/* Глобальные стили */
-</style>
