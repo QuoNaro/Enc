@@ -6,6 +6,8 @@ from pydantic import BaseModel
 from pydantic import BaseModel, EmailStr
 from fastapi import Depends, HTTPException, status
 
+from models.models import BlacklistedToken
+
 SECRET_KEY = "your_secret_key"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 5

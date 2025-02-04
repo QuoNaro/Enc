@@ -9,20 +9,19 @@
 </template>
 
 <script>
-import { logout } from '@/services/AuthAPI'; // Импортируем функцию logout
-import apiClient from '@/services/AuthAPI'; // Импортируем глобального клиента ky
+import { logout } from '@/services/AuthAPI';
+import { getProtectedData } from '@/services/AuthAPI'; // Импортируем функцию getProtectedData
 
 export default {
   data() {
     return {
-      protectedData: null, // Данные с защищённого эндпоинта
+      protectedData: null,
     };
   },
   methods: {
     async fetchProtectedData() {
       try {
-        const response = await apiClient.get('/protected-data'); // Токен добавляется автоматически
-        this.protectedData = await response.json();
+        this.protectedData = await getProtectedData(); // Получаем защищённые данные
       } catch (error) {
         alert('Failed to fetch protected data.');
       }

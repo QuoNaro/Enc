@@ -1,0 +1,53 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Запустить FastAPI",
+      "type": "shell",
+      "command": "uvicorn main:app --reload --host 0.0.0.0 --port 8000",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "options": {
+        "cwd": "${workspaceFolder}/backend"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Запустить Vue.js",
+      "type": "shell",
+      "command": "npm run serve",
+      "options": {
+        "cwd": "${workspaceFolder}/frontend"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Запустить Docker Compose",
+      "type": "shell",
+      "command": "docker-compose up",
+      "options": {
+        "cwd": "${workspaceFolder}" // Укажите путь к папке, где находится docker-compose.yml
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "problemMatcher": [],
+      "isBackground": true, // Позволяет отслеживать процесс в фоне
+      "group": "build" // Группировка задачи (необязательно)
+    }
+  ],
+  "compounds": [
+    {
+      "label": "Запустить все сервисы",
+      "dependsOn": ["Запустить FastAPI", "Запустить Vue.js", "Запустить Docker Compose"],
+      "dependsOrder": "parallel"
+    }
+  ]
+}
