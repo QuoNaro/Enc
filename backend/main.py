@@ -6,9 +6,8 @@ from sqlalchemy import create_engine,Column, Integer, String, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Session, sessionmaker
 from datetime import datetime, timedelta, timezone
-from typing import Optional, List
+from typing import Optional
 from fastapi.middleware.cors import CORSMiddleware
-from typing import Annotated
 
 # Schemas
 from pydantic import BaseModel
