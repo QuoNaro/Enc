@@ -8,11 +8,11 @@
             <h2>Register</h2>
             <form @submit.prevent="register">
                 <div class="form-group">
-                    <label for="username">Username:</label>
+                    <label for="username">{{ $t('auth.username') }}</label>
                     <input type="text" id="username_up" v-model="username_up" class="form-control">
                 </div>
                 <div class="form-group">
-                    <label for="password">Password:</label>
+                    <label for="password">{{ $t('auth.password') }}</label>
                     <input type="password" id="password_up" v-model="password_up" class="form-control">
                 </div>
                 <button type="submit" class="btn btn-primary">Register</button>
@@ -23,11 +23,11 @@
             <h2>Login</h2>
             <form @submit.prevent="login">
                 <div class="form-group">
-                    <label for="username">Username:</label>
+                    <label for="username">{{ $t('auth.username') }}</label>
                     <input type="text" id="username_in" v-model="username_in" class="form-control">
                 </div>
                 <div class="form-group">
-                    <label for="password">Password:</label>
+                    <label for="password">{{ $t('auth.password') }}</label>
                     <input type="password" id="password_in" v-model="password_in" class="form-control">
                 </div>
                 <button type="submit" class="btn btn-primary">Login</button>
@@ -90,11 +90,24 @@ export default {
         }
     },
     mounted() {
+
+        this.changeTitle = () => {
+            switch (this.currentHash) {
+                case "#signin":
+                    document.title = 'Авторизация'; break;    
+                case "#signup":
+                    document.title = 'Регистрация'; break;
+            }
+        };
+
         this.hashChangeHandler = () => {
             this.currentHash = window.location.hash;
+            this.changeTitle()
         };
+
         window.addEventListener('hashchange', this.hashChangeHandler);
     },
+    
     beforeUnmount() {
         if (this.hashChangeHandler) {
             window.removeEventListener('hashchange', this.hashChangeHandler);
@@ -104,27 +117,5 @@ export default {
 </script>
 
 <style scoped>
-.form-group {
-    margin-bottom: 1rem;
-}
 
-.form-control {
-    width: 100%;
-    padding: 0.5rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-.btn {
-    padding: 0.5rem 1rem;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.btn:hover {
-    background-color: #0056b3;
-}
 </style>
