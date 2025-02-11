@@ -2,6 +2,8 @@ import Vue from 'vue';
 import App from './App.vue';
 import router from './router';
 import './assets/colors.css';
+import './assets/global.css';
+
 import VueI18n from 'vue-i18n';
 
 Vue.config.productionTip = false;
