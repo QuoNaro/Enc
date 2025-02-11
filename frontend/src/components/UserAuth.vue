@@ -18,7 +18,7 @@
                 <button type="submit" class="btn btn-primary">Register</button>
             </form>
         </div>
-
+        
         <div v-else-if="currentHash === '#signin'">
             <h2>Login</h2>
             <form @submit.prevent="login">
@@ -37,8 +37,10 @@
 </template>
 
 <script>
-import axios from 'axios';
+import nt from '@/services/notificationService';
 
+
+import axios from 'axios';
 export default {
     name: 'UserAuth',
     data() {
@@ -65,32 +67,32 @@ export default {
                 const response = await axios.post('http://localhost:8000/token', params);
                 if (typeof localStorage !== 'undefined') {
                     localStorage.setItem('token', response.data.access_token);
-                } else {
-                    console.warn('LocalStorage is not available');
                 }
             } catch (error) {
-                console.error(error);
+                nt.showNotification('error',this.$t('auth.error.auth.AUTH-001'), 2000);
             }
         },
         async register() {
             try {
-                const response = await axios.post('http://localhost:8000/register', {
+                await axios.post('http://localhost:8000/register', {
                     username: this.username_up,
                     password: this.password_up,
-                }, {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
                 });
-                console.log(response.data);
+                
                 this.navigateTo('#signin'); // Перенаправление на форму входа
             } catch (error) {
-                console.error(error);
+                let fk = Object.keys(error.response.data.detail)[0];
+                let error_message = this.$t(`auth.error.password.${fk}`);
+                
+                
+                 
+                   
+        
+                nt.showNotification('error',error_message, 5000)
             }
         }
     },
     mounted() {
-
         this.changeTitle = () => {
             switch (this.currentHash) {
                 case "#signin":
@@ -107,7 +109,6 @@ export default {
 
         window.addEventListener('hashchange', this.hashChangeHandler);
     },
-    
     beforeUnmount() {
         if (this.hashChangeHandler) {
             window.removeEventListener('hashchange', this.hashChangeHandler);

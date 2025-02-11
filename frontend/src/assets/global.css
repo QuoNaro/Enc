@@ -1,0 +1,19 @@
+/* Сброс стандартных отступов */
+html, body { 
+    width: 100%;
+    height: 100%;
+}
+
+html, body, *{
+    margin: 0; /* Убираем внешние отступы */
+    padding: 0; /* Убираем внутренние отступы */
+    box-sizing: border-box; /* Включаем режим box-sizing для всех элементов */
+}
+
+body { 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+  

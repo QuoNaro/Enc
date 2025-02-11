@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session, sessionmaker
 from datetime import datetime, timedelta, timezone
 from typing import Optional
 from fastapi.middleware.cors import CORSMiddleware
-
+from passwordModel import Password
 # Schemas
 from pydantic import BaseModel
 
@@ -122,9 +122,16 @@ def authenticate_user(db,username:str , password: str):
 
 @app.post("/register", response_model=Token)
 def register(user: UserCreate, db: Session = Depends(get_db)):
-    db_user = get_user(db, user.username, password=user.password)
+    
+    password = Password(password=user.password)
+    
+    if not password.is_valid:
+        raise HTTPException(status_code=422, detail=password.validation_errors)
+        
+    db_user = get_user(db, user.username, password=password.password)
     if db_user:
         raise HTTPException(status_code=400, detail="Username already registered")
+    
     hashed_password = get_password_hash(user.password)
     db_user = User(username=user.username, hashed_password=hashed_password)
     db.add(db_user)
