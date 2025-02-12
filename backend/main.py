@@ -66,6 +66,15 @@ class Token(BaseModel):
 class TokenData(BaseModel):
     username: Optional[str] = None
     
+# Pydantic модель для ответа с данными пользователя
+class UserResponse(BaseModel):
+    id: int
+    username: str
+    is_active: bool
+
+    class Config:
+        orm_mode = True  # Разрешает работать с ORM объектами
+    
 
 # Authentication setup
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -73,22 +82,23 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl='token')
 
 
 def get_current_user(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
-    credetionals_exception = HTTPException(
+    credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate" : "Bearer"}
+        detail="Не удалось проверить учетные данные",
+        headers={"WWW-Authenticate": "Bearer"}
     )
     try:
-        payload= jwt.decode(token,SECRET_KEY,algorithms=[ALGORITHM])
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         username: str = payload.get("sub")
         if username is None:
-            raise credetionals_exception
+            raise credentials_exception
         token_data = TokenData(username=username)
     except JWTError:
-        raise credetionals_exception
-    user = get_current_user(db,username=token_data.username)
+        raise credentials_exception
+    
+    user = get_user(db, username=token_data.username)
     if user is None:
-        raise credetionals_exception
+        raise credentials_exception
     return user
 
 
@@ -108,35 +118,38 @@ def create_access_token(data : dict, expires_delta: Optional[timedelta]= None):
     encoded_jwt = jwt.encode(to_encode,SECRET_KEY,algorithm=ALGORITHM)
     return encoded_jwt
         
-def get_user(db,username: str, password: str):
+def get_user(db, username: str):
     return db.query(User).filter(User.username == username).first()
 
-def authenticate_user(db,username:str , password: str):
-    user = get_user(db=db, username=username,password=password)
-    if not user: 
+def authenticate_user(db, username: str, password: str):
+    user = get_user(db, username)  # **Исправлено: убран параметр password**
+    if not user:
         return False
-    if not verify_password(password,user.hashed_password):
+    if not verify_password(password, user.hashed_password):
         return False
     return user
 
 
 @app.post("/register", response_model=Token)
 def register(user: UserCreate, db: Session = Depends(get_db)):
-    
+    # Проверяем валидность пароля
     password = Password(password=user.password)
-    
     if not password.is_valid:
         raise HTTPException(status_code=422, detail=password.validation_errors)
-        
-    db_user = get_user(db, user.username, password=password.password)
+    
+    # Проверяем, существует ли пользователь с таким именем
+    db_user = get_user(db, user.username)  # Убран параметр password
     if db_user:
         raise HTTPException(status_code=400, detail="Username already registered")
     
+    # Хэшируем пароль и создаем нового пользователя
     hashed_password = get_password_hash(user.password)
     db_user = User(username=user.username, hashed_password=hashed_password)
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
+    
+    # Создаем токен доступа
     access_token = create_access_token(data={"sub": db_user.username})
     return {"access_token": access_token, "token_type": "bearer"}
 
@@ -152,8 +165,7 @@ def login_for_access_token(db: Session = Depends(get_db), form_data: OAuth2Passw
     access_token = create_access_token(data={"sub": user.username})
     return {"access_token": access_token, "token_type": "bearer"}
 
-@app.post('/users/me', response_model=UserCreate)
-def read_users_me(current_user: dict = Depends(get_current_user)):
+@app.post('/my', response_model=UserResponse)
+def read_users_me(current_user: User = Depends(get_current_user)):
     return current_user
-
     
