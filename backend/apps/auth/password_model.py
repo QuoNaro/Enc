@@ -1,7 +1,5 @@
 from pydantic import Field, BaseModel
-from pydantic_settings import BaseSettings
-
-
+from settings import PasswordSettings
 
 class PasswordValidationErrors(BaseModel):
     """Словарь кодов ошибок и их описаний."""

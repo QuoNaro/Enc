@@ -1,11 +1,20 @@
 from pathlib import Path
+from passlib.context import CryptContext
+
+from fastapi.security import OAuth2PasswordBearer
 from pydantic import Field
+
 from pydantic_settings import BaseSettings
 from typing import Optional
 
 # Определение базовой директории
 BASE_DIR = Path(__file__).resolve().parent
 ENV_PATH = BASE_DIR / ".env"
+
+# Параметры Аутентификации
+PWD_CONTEXT = CryptContext(schemes=["bcrypt"], deprecated="auto")
+OAUTH2_SCHEME = OAuth2PasswordBearer(tokenUrl='token')
+ALGORITHM = "HS256"
 
 class EncSettings(BaseSettings):
     class Config:
@@ -37,7 +46,8 @@ class DatabaseSettings(EncSettings):
 
     @property
     def DATABASE_URL(self) -> str:
-        return f"postgres://{self.user}:{self.password}@{self.host}:{self.port}/{self.db}"
+        
+        return f"postgresql://{self.user}:{self.password}@{self.host}:{self.port}/{self.db}"
 
 class AppSettings(EncSettings):
     secret_key: str
