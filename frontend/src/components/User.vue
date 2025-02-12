@@ -31,6 +31,7 @@
                     Authorization: `Bearer ${this.token}`, // Заголовок должен быть здесь
                 },
                 });
+                console.log(response.data)
                 this.user = response.data; // Сохраняем данные пользователя
             } catch (error) {
                 this.$router.push({ name: 'UserAuth' })

@@ -1,22 +1,6 @@
-from pydantic import Field, BaseModel, ValidationError
+from pydantic import Field, BaseModel
 from pydantic_settings import BaseSettings
-from dotenv import load_dotenv
 
-# Загрузка переменных окружения из .env файла (если он существует)
-load_dotenv()
-
-class PasswordSettings(BaseSettings):
-    min_length: int = Field(default=8, ge=1)  # Минимальная длина пароля (стандартное значение: 8)
-    max_length: int = Field(default=64, gt=7)  # Максимальная длина пароля (стандартное значение: 64)
-    require_uppercase: bool = Field(default=True)  # Требовать заглавные буквы (стандартное значение: True)
-    require_lowercase: bool = Field(default=True)  # Требовать строчные буквы (стандартное значение: True)
-    require_digit: bool = Field(default=True)  # Требовать цифры (стандартное значение: True)
-    require_special_char: bool = Field(default=False)  # Требовать специальные символы (стандартное значение: False)
-    allowed_special_chars: str = Field(default="!@#$%^&*()-_=+[]{}|;:,.<>?/~`")  # Допустимые специальные символы (стандартное значение)
-
-    class Config:
-        env_prefix = "PASSWORD_"  # Префикс для переменных окружения
-        case_sensitive = False  # Игнорировать регистр при поиске переменных
 
 
 class PasswordValidationErrors(BaseModel):
@@ -26,7 +10,6 @@ class PasswordValidationErrors(BaseModel):
     lowercase_error: str = "Password must contain at least one lowercase letter."
     digit_error: str = "Password must contain at least one digit."
     special_char_error: str = "Password must contain at least one special character from: {allowed_chars}."
-
 
 class Password(BaseModel):
     password: str = Field(..., min_length=1)  # Пароль должен быть строкой
