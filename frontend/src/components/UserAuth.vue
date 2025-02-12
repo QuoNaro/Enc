@@ -9,7 +9,7 @@
             <form @submit.prevent="register">
                 <div class="form-group">
                     <label for="username">{{ $t('auth.username') }}</label>
-                    <input type="text" id="username_up" v-model="username_up" class="form-control">
+                    <input type="login" v-onlyEng id="username_up" v-model="username_up" class="form-control">
                 </div>
                 <div class="form-group">
                     <label for="password">{{ $t('auth.password') }}</label>
@@ -24,7 +24,7 @@
             <form @submit.prevent="login">
                 <div class="form-group">
                     <label for="username">{{ $t('auth.username') }}</label>
-                    <input type="text" id="username_in" v-model="username_in" class="form-control">
+                    <input type="login" v-onlyEng id="username_in" v-model="username_in" class="form-control">
                 </div>
                 <div class="form-group">
                     <label for="password">{{ $t('auth.password') }}</label>
@@ -54,6 +54,8 @@ export default {
         };
     },
     methods: {
+        
+
         navigateTo(hash) {
             window.location.hash = hash;
             this.currentHash = hash;
