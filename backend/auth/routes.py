@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends
 
-from apps.auth.schemas import Token,UserCreate, UserResponse
-from apps.auth.database import get_db
-from apps.auth.password_model import Password
-from apps.auth.auth import authenticate_user, create_access_token, get_user,get_password_hash,get_current_user
-from apps.auth.models import User
+from .schemas import Token,UserCreate, UserResponse
+from .database import get_db
+from .password_model import Password
+from .security import authenticate_user,get_current_user ,get_password_hash,get_user,create_access_token
+from .models import User
 
 from fastapi import HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
@@ -51,4 +51,11 @@ def login_for_access_token(db: Session = Depends(get_db), form_data: OAuth2Passw
 @router.post('/my', response_model=UserResponse)
 def read_users_me(current_user: User = Depends(get_current_user)):
     return current_user
+
+@router.get("/check_username/")
+async def check_username(username: str, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.username == username).first()
     
+    if user:
+        return {"available": False, "message": "Username already taken"}
+    return {"available": True, "message": "Username is available"}
