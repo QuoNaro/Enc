@@ -3,7 +3,7 @@ import Router from 'vue-router';
 import UserAuth from '@/components/UserAuth.vue';
 import NotFound from '@/components/Error/NotFound.vue';
 import MyProfile from '@/components/User.vue';
-
+import handleTokenExpiration from '@/services/idleTimer'
 
 Vue.use(Router);
 
@@ -34,15 +34,33 @@ const router = new Router({
   routes
 });
 
-// Функция для проверки аутентификации
 function isAuthenticated() {
-  return localStorage.getItem('token') !== null; // Пример проверки
+  const token = localStorage.getItem('token');
+  if (!token) return false;
+
+  try {
+    // Попытка декодировать токен (без валидации подписи)
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const expirationTime = payload.exp; // Время истечения токена (в секундах)
+
+    if (expirationTime && Date.now() / 1000 > expirationTime) {
+      return false; // Токен истёк
+    }
+
+    return true; // Токен действителен
+  } catch (error) {
+    return false;
+  }
 }
+
+
+
 
 // Глобальный гвард для защиты маршрутов
 router.beforeEach((to, from, next) => {
-  // Если маршрут не является страницей входа и пользователь не авторизован
   if (to.path !== '/auth' && !isAuthenticated()) {
+    // Если токен отсутствует или истёк, выполняем специфические действия
+    handleTokenExpiration();
     next('/auth'); // Перенаправляем на страницу входа
   } else {
     next(); // Разрешаем переход
@@ -50,7 +68,7 @@ router.beforeEach((to, from, next) => {
 });
 
 router.beforeEach((to, from, next) => {
-  document.title = to.meta.title || 'Хранилище Encryption';
+  document.title = to.meta.title || 'Encryption';
   next();
 });
 

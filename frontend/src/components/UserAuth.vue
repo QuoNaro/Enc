@@ -8,11 +8,11 @@
             <form @submit.prevent="register">
                 <div class="form-group">
                     <label for="username">{{ $t('auth.username') }}</label>
-                    <input type="login" v-onlyEng id="username_up" v-model="username_up" class="form-control">
+                    <input required type="login" v-onlyEng id="username_up" v-model="username_up" class="form-control">
                 </div>
                 <div class="form-group">
                     <label for="password">{{ $t('auth.password') }}</label>
-                    <input type="password" id="password_up" v-model="password_up" class="form-control">
+                    <input required type="password" id="password_up" v-model="password_up" class="form-control">
                 </div>
                 <button type="submit" class="btn btn-primary">Register</button>
             </form>
@@ -23,11 +23,11 @@
             <form @submit.prevent="login">
                 <div class="form-group">
                     <label for="username">{{ $t('auth.username') }}</label>
-                    <input type="login" v-onlyEng id="username_in" v-model="username_in" class="form-control">
+                    <input required type="login" v-onlyEng id="username_in" v-model="username_in" class="form-control">
                 </div>
                 <div class="form-group">
                     <label for="password">{{ $t('auth.password') }}</label>
-                    <input type="password" id="password_in" v-model="password_in" class="form-control">
+                    <input required type="password" id="password_in" v-model="password_in" class="form-control">
                 </div>
                 <button type="submit" class="btn btn-primary">Login</button>
             </form>
@@ -36,11 +36,9 @@
 </template>
 
 <script>
+import router from '@/router';
 import nt from '@/services/notificationService';
-
-
 import axios from 'axios';
-
 
 export default {
     name: 'UserAuth',
@@ -56,8 +54,6 @@ export default {
         };
     },
     methods: {
-        
-
         navigateTo(hash) {
             window.location.hash = hash;
             this.currentHash = hash;
@@ -71,6 +67,7 @@ export default {
                 const response = await axios.post('http://localhost:8000/token', params);
                 if (typeof localStorage !== 'undefined') {
                     localStorage.setItem('token', response.data.access_token);
+                    router.push('/my')
                 }
             } catch (error) {
                 nt.showNotification('error',this.$t('auth.error.auth.AUTH-001'), 2000);
@@ -85,12 +82,13 @@ export default {
                 
                 if (typeof localStorage !== 'undefined') {
                     localStorage.setItem('token', response.data.access_token);
+                    router.push('/my')
                 }
                 
             } catch (error) {
                 let fk = Object.keys(error.response.data.detail)[0];
                 let error_message = this.$t(`auth.error.password.${fk}`);
-                nt.showNotification('error',error_message, 5000)
+                nt.showNotification('error',error_message)
             }
         }
     },
