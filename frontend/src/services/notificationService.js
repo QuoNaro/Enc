@@ -19,25 +19,29 @@ export default {
     // Добавляем элемент в DOM
     document.body.appendChild(newNotificationInstance.$el);
 
-    // Убедимся, что DOM обновлен перед началом анимации
+    // Удаляем класс hidden после рендера
     newNotificationInstance.$nextTick(() => {
-      // Удаляем класс hidden, чтобы подготовить элемент к анимации
       newNotificationInstance.$el.classList.remove("hidden");
 
-      // Используем двойной requestAnimationFrame для гарантии анимации
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
-          // Добавляем класс visible для запуска анимации
           newNotificationInstance.$el.classList.add("visible");
         });
       });
     });
 
+    // Добавляем обработчик клика для удаления уведомления
+    newNotificationInstance.$el.addEventListener("click", () => {
+      this.hideNotification(newNotificationInstance);
+    });
+
     // Добавляем новое уведомление в очередь
     this.notificationQueue.push(newNotificationInstance);
 
-    // Запускаем таймер для автоматического скрытия нового уведомления
-    this.scheduleHideNotification(newNotificationInstance, delay);
+    // Запускаем таймер для автоматического скрытия только если delay > 0
+    if (delay > 0) {
+      this.scheduleHideNotification(newNotificationInstance, delay);
+    }
   },
 
   hideNotification(instance) {
@@ -51,7 +55,6 @@ export default {
         if (instance && instance.$el && instance.$el.parentNode) {
           instance.$el.parentNode.removeChild(instance.$el);
           instance.$destroy(); // Уничтожаем Vue-компонент
-
           // Удаляем уведомление из очереди
           this.notificationQueue = this.notificationQueue.filter(
             (item) => item !== instance

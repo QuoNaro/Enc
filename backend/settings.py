@@ -7,6 +7,8 @@ from pydantic import Field
 from pydantic_settings import BaseSettings
 from typing import Optional
 
+
+
 # Определение базовой директории
 BASE_DIR = Path(__file__).resolve().parent
 ENV_PATH = BASE_DIR / ".env"

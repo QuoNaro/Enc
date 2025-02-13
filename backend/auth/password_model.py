@@ -17,13 +17,12 @@ class Password(BaseModel):
     @staticmethod
     def validate_password(value: str, settings: PasswordSettings, error_codes: PasswordValidationErrors) -> dict:
         errors = {}
-
+        
         # Проверка длины пароля
         if not (settings.min_length <= len(value) <= settings.max_length):
             errors["PASS-001"] = error_codes.length_error.format(
                 min=settings.min_length, max=settings.max_length
             )
-
         # Проверка наличия заглавных букв
         if settings.require_uppercase and not any(c.isupper() for c in value):
             errors["PASS-002"] = error_codes.uppercase_error

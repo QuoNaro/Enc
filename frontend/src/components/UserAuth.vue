@@ -8,11 +8,12 @@
             <form @submit.prevent="register">
                 <div class="form-group">
                     <label for="username">{{ $t('auth.username') }}</label>
-                    <input type="login" v-onlyEng id="username_up" v-model="username_up" class="form-control">
+                    <input @input="debouncedCheckUsername" required type="login" v-onlyEng id="username_up" v-model="username_up" class="form-control">
+                    <div>{{ username_up_error }}</div>
                 </div>
                 <div class="form-group">
                     <label for="password">{{ $t('auth.password') }}</label>
-                    <input type="password" id="password_up" v-model="password_up" class="form-control">
+                    <input required type="password" id="password_up" v-model="password_up" class="form-control">
                 </div>
                 <button type="submit" class="btn btn-primary">Register</button>
             </form>
@@ -23,11 +24,13 @@
             <form @submit.prevent="login">
                 <div class="form-group">
                     <label for="username">{{ $t('auth.username') }}</label>
-                    <input type="login" v-onlyEng id="username_in" v-model="username_in" class="form-control">
+                    
+                    <input required type="login" v-onlyEng id="username_in" v-model="username_in" class="form-control">
+                    
                 </div>
                 <div class="form-group">
                     <label for="password">{{ $t('auth.password') }}</label>
-                    <input type="password" id="password_in" v-model="password_in" class="form-control">
+                    <input required type="password" id="password_in" v-model="password_in" class="form-control">
                 </div>
                 <button type="submit" class="btn btn-primary">Login</button>
             </form>
@@ -36,11 +39,9 @@
 </template>
 
 <script>
+import router from '@/router';
 import nt from '@/services/notificationService';
-
-
-import axios from 'axios';
-
+import apiClient from '@/services/api';
 
 export default {
     name: 'UserAuth',
@@ -50,14 +51,41 @@ export default {
             username_in: '',
             password_in: '',
             username_up: '',
+            username_up_error: '',
             password_up: '',
             currentHash: window.location.hash || '#signin',
             hashChangeHandler: null,
         };
     },
     methods: {
-        
+       
+        async checkUsername() {
+        if (this.username_up === '') {
+            this.username_up_error = ''; // Очищаем ошибку, если поле пустое
+            return;
+        }
 
+        try {
+            const response = await apiClient.get(`/check_username/?username=${this.username_up}`);
+            if (!response.data.available) {
+            this.username_up_error = this.$t('auth.error.auth.USER-001');
+            } else {
+            this.username_up_error = '';
+            }
+        } catch (error) {
+            console.error('Ошибка при проверке имени пользователя:', error);
+            this.username_up_error = 'Произошла ошибка при проверке.';
+        }
+        },
+
+        debounce(func, delay) {
+        let timeoutId;
+        return function (...args) {
+            clearTimeout(timeoutId); // Очищаем предыдущий таймер
+            timeoutId = setTimeout(() => func.apply(this, args), delay); // Устанавливаем новый таймер
+        };
+        },
+        
         navigateTo(hash) {
             window.location.hash = hash;
             this.currentHash = hash;
@@ -68,9 +96,10 @@ export default {
                 params.append('username', this.username_in);
                 params.append('password', this.password_in);
 
-                const response = await axios.post('http://localhost:8000/token', params);
+                const response = await apiClient.post('/token', params);
                 if (typeof localStorage !== 'undefined') {
                     localStorage.setItem('token', response.data.access_token);
+                    router.push('/my')
                 }
             } catch (error) {
                 nt.showNotification('error',this.$t('auth.error.auth.AUTH-001'), 2000);
@@ -78,21 +107,22 @@ export default {
         },
         async register() {
             try {
-                let response = await axios.post('http://localhost:8000/register', {
+                let response = await apiClient.post('/register', {
                     username: this.username_up,
                     password: this.password_up,
                 });
                 
                 if (typeof localStorage !== 'undefined') {
                     localStorage.setItem('token', response.data.access_token);
+                    router.push('/my')
                 }
                 
             } catch (error) {
                 let fk = Object.keys(error.response.data.detail)[0];
                 let error_message = this.$t(`auth.error.password.${fk}`);
-                nt.showNotification('error',error_message, 5000)
+                nt.showNotification('error',error_message)
             }
-        }
+        },
     },
     mounted() {
         this.changeTitle = () => {
@@ -115,7 +145,12 @@ export default {
         if (this.hashChangeHandler) {
             window.removeEventListener('hashchange', this.hashChangeHandler);
         }
+    },
+    computed: {
+    debouncedCheckUsername() {
+      return this.debounce(this.checkUsername, 600); // Задержка 400 мс
     }
+  }
 };
 </script>
 
