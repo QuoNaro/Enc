@@ -3,6 +3,7 @@ import App from './App.vue';
 import router from './router';
 import './assets/colors.css';
 import './assets/global.css';
+import onlyEng from '@/directives/onlyEng';
 
 import VueI18n from 'vue-i18n';
 
@@ -22,6 +23,10 @@ const i18n = new VueI18n({
     ru: ru
   }
 });
+
+
+// Директивы
+Vue.directive('onlyEng', onlyEng)
 
 new Vue({
   router,

@@ -3,13 +3,12 @@
         <h1>Auth Page</h1>
         <button @click="navigateTo('#signin')">Sign In</button>
         <button @click="navigateTo('#signup')">Sign Up</button>
-
         <div v-if="currentHash === '#signup'">
             <h2>Register</h2>
             <form @submit.prevent="register">
                 <div class="form-group">
                     <label for="username">{{ $t('auth.username') }}</label>
-                    <input type="text" id="username_up" v-model="username_up" class="form-control">
+                    <input type="login" v-onlyEng id="username_up" v-model="username_up" class="form-control">
                 </div>
                 <div class="form-group">
                     <label for="password">{{ $t('auth.password') }}</label>
@@ -24,7 +23,7 @@
             <form @submit.prevent="login">
                 <div class="form-group">
                     <label for="username">{{ $t('auth.username') }}</label>
-                    <input type="text" id="username_in" v-model="username_in" class="form-control">
+                    <input type="login" v-onlyEng id="username_in" v-model="username_in" class="form-control">
                 </div>
                 <div class="form-group">
                     <label for="password">{{ $t('auth.password') }}</label>
@@ -41,8 +40,11 @@ import nt from '@/services/notificationService';
 
 
 import axios from 'axios';
+
+
 export default {
     name: 'UserAuth',
+    
     data() {
         return {
             username_in: '',
@@ -54,6 +56,8 @@ export default {
         };
     },
     methods: {
+        
+
         navigateTo(hash) {
             window.location.hash = hash;
             this.currentHash = hash;
@@ -74,20 +78,18 @@ export default {
         },
         async register() {
             try {
-                await axios.post('http://localhost:8000/register', {
+                let response = await axios.post('http://localhost:8000/register', {
                     username: this.username_up,
                     password: this.password_up,
                 });
                 
-                this.navigateTo('#signin'); // Перенаправление на форму входа
+                if (typeof localStorage !== 'undefined') {
+                    localStorage.setItem('token', response.data.access_token);
+                }
+                
             } catch (error) {
                 let fk = Object.keys(error.response.data.detail)[0];
                 let error_message = this.$t(`auth.error.password.${fk}`);
-                
-                
-                 
-                   
-        
                 nt.showNotification('error',error_message, 5000)
             }
         }

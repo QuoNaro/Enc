@@ -1,4 +1,30 @@
 {
-    "register" : "Signup",
-    "login" : "Signin"
-}
+    "auth": {
+      "register": "Register",
+      "login": "Login",
+      "username": "Username",
+      "password": "Password",
+      "error": {
+        "auth": {
+          "AUTH-001": "Incorrect username or password.",
+          "AUTH-005": "Password confirmation does not match the entered password.",
+          "AUTH-006": "Email is in an invalid format.",
+          "AUTH-007": "The password reset link has expired.",
+          "AUTH-008": "User not found in the system.",
+          "AUTH-009": "Error sending email. Please try again later.",
+          "AUTH-010": "Two-factor authentication is required.",
+          "AUTH-011": "Incorrect two-factor authentication code.",
+          "AUTH-012": "User session has expired. Please log in again.",
+          "AUTH-013": "You can only enter English letters and numbers!"
+        },
+        "password": {
+          "PASS-001": "Password length is violated.",
+          "PASS-002": "Password must contain at least one uppercase letter.",
+          "PASS-003": "Password must contain at least one lowercase letter.",
+          "PASS-004": "Password must contain at least one digit.",
+          "PASS-005": "Password must contain at least one special character."
+        }
+      }
+    }
+  }
+  
