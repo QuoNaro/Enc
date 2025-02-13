@@ -9,7 +9,7 @@
   </template>
   
   <script>
-  import axios from 'axios';
+  import apiClient from '@/services/api';
   
   export default {
     name : "MyProfile",
@@ -26,13 +26,8 @@
     methods: {
         async fetchUserProfile() {
             try {
-                const response = await axios.post('http://localhost:8000/my', {}, { // Пустой объект для body
-                headers: {
-                    Authorization: `Bearer ${this.token}`, // Заголовок должен быть здесь
-                },
-                });
-                console.log(response.data)
-                this.user = response.data; // Сохраняем данные пользователя
+                const response = await apiClient.post('/my');
+                this.user = response.data;
             } catch (error) {
                 this.$router.push({ name: 'UserAuth' })
             }

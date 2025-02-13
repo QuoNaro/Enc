@@ -38,7 +38,7 @@
 <script>
 import router from '@/router';
 import nt from '@/services/notificationService';
-import axios from 'axios';
+import apiClient from '@/services/api';
 
 export default {
     name: 'UserAuth',
@@ -64,7 +64,7 @@ export default {
                 params.append('username', this.username_in);
                 params.append('password', this.password_in);
 
-                const response = await axios.post('http://localhost:8000/token', params);
+                const response = await apiClient.post('/token', params);
                 if (typeof localStorage !== 'undefined') {
                     localStorage.setItem('token', response.data.access_token);
                     router.push('/my')
@@ -75,7 +75,7 @@ export default {
         },
         async register() {
             try {
-                let response = await axios.post('http://localhost:8000/register', {
+                let response = await apiClient.post('/register', {
                     username: this.username_up,
                     password: this.password_up,
                 });
@@ -90,7 +90,26 @@ export default {
                 let error_message = this.$t(`auth.error.password.${fk}`);
                 nt.showNotification('error',error_message)
             }
-        }
+        },
+        async checkUsername() {
+            if (this.username.trim() === "") {
+                this.result = null;
+                return;
+            }
+
+            try {
+                const response = await apiClient.get("/check_username", {
+                params: { username: this.username },
+                });
+                this.result = response.data;
+            } catch (error) {
+                console.error("Ошибка при проверке имени пользователя:", error);
+                this.result = {
+                available: false,
+                message: "Не удалось проверить имя пользователя",
+                };
+            }
+        },
     },
     mounted() {
         this.changeTitle = () => {
