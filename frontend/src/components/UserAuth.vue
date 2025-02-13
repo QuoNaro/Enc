@@ -8,7 +8,8 @@
             <form @submit.prevent="register">
                 <div class="form-group">
                     <label for="username">{{ $t('auth.username') }}</label>
-                    <input required type="login" v-onlyEng id="username_up" v-model="username_up" class="form-control">
+                    <input @input="debouncedCheckUsername" required type="login" v-onlyEng id="username_up" v-model="username_up" class="form-control">
+                    <div>{{ username_up_error }}</div>
                 </div>
                 <div class="form-group">
                     <label for="password">{{ $t('auth.password') }}</label>
@@ -23,7 +24,9 @@
             <form @submit.prevent="login">
                 <div class="form-group">
                     <label for="username">{{ $t('auth.username') }}</label>
+                    
                     <input required type="login" v-onlyEng id="username_in" v-model="username_in" class="form-control">
+                    
                 </div>
                 <div class="form-group">
                     <label for="password">{{ $t('auth.password') }}</label>
@@ -48,12 +51,41 @@ export default {
             username_in: '',
             password_in: '',
             username_up: '',
+            username_up_error: '',
             password_up: '',
             currentHash: window.location.hash || '#signin',
             hashChangeHandler: null,
         };
     },
     methods: {
+       
+        async checkUsername() {
+        if (this.username_up === '') {
+            this.username_up_error = ''; // Очищаем ошибку, если поле пустое
+            return;
+        }
+
+        try {
+            const response = await apiClient.get(`/check_username/?username=${this.username_up}`);
+            if (!response.data.available) {
+            this.username_up_error = this.$t('auth.error.auth.USER-001');
+            } else {
+            this.username_up_error = '';
+            }
+        } catch (error) {
+            console.error('Ошибка при проверке имени пользователя:', error);
+            this.username_up_error = 'Произошла ошибка при проверке.';
+        }
+        },
+
+        debounce(func, delay) {
+        let timeoutId;
+        return function (...args) {
+            clearTimeout(timeoutId); // Очищаем предыдущий таймер
+            timeoutId = setTimeout(() => func.apply(this, args), delay); // Устанавливаем новый таймер
+        };
+        },
+        
         navigateTo(hash) {
             window.location.hash = hash;
             this.currentHash = hash;
@@ -91,25 +123,6 @@ export default {
                 nt.showNotification('error',error_message)
             }
         },
-        async checkUsername() {
-            if (this.username.trim() === "") {
-                this.result = null;
-                return;
-            }
-
-            try {
-                const response = await apiClient.get("/check_username", {
-                params: { username: this.username },
-                });
-                this.result = response.data;
-            } catch (error) {
-                console.error("Ошибка при проверке имени пользователя:", error);
-                this.result = {
-                available: false,
-                message: "Не удалось проверить имя пользователя",
-                };
-            }
-        },
     },
     mounted() {
         this.changeTitle = () => {
@@ -132,7 +145,12 @@ export default {
         if (this.hashChangeHandler) {
             window.removeEventListener('hashchange', this.hashChangeHandler);
         }
+    },
+    computed: {
+    debouncedCheckUsername() {
+      return this.debounce(this.checkUsername, 600); // Задержка 400 мс
     }
+  }
 };
 </script>
 
