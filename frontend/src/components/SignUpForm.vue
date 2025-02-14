@@ -9,7 +9,7 @@
             </div>
             <div class="form-group">
                 <label for="password">{{ $t('auth.password') }}</label>
-                <input @input="debouncedValidatePassword" required type="password" id="password_up" v-onlyEng v-model="password_up" class="form-control">
+                <input @input="debouncedValidatePassword" required type="password" id="password_up" v-password v-model="password_up" class="form-control">
             </div>
             <template v-if="password_errors">
                 <li v-for="(item) in password_errors" :key="item">
@@ -54,7 +54,7 @@ export default {
                 this.username_up_error = 'Произошла ошибка при проверке.';
             }
         },
-        
+
         async validatePassword() {
             try {
                 if (this.password_up.trim() != "") {
@@ -63,6 +63,10 @@ export default {
                         this.password_errors = Object.values(response.data.errors)
                     }
                 }
+                else { 
+                    this.password_errors = ""
+                }
+                
                 
             } catch (error) {
                 console.error(error)
