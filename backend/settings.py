@@ -9,6 +9,7 @@ from typing import Optional
 
 
 
+
 # Определение базовой директории
 BASE_DIR = Path(__file__).resolve().parent
 ENV_PATH = BASE_DIR / ".env"
@@ -20,7 +21,7 @@ ALGORITHM = "HS256"
 
 class EncSettings(BaseSettings):
     class Config:
-        extra = 'allow'
+        extra = 'ignore'
         env_file = ENV_PATH
         case_sensitive = False
 

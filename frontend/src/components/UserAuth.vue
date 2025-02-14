@@ -1,142 +1,53 @@
 <template>
     <div>
-        <h1>Auth Page</h1>
-        <button @click="navigateTo('#signin')">Sign In</button>
-        <button @click="navigateTo('#signup')">Sign Up</button>
-        <div v-if="currentHash === '#signup'">
-            <h2>Register</h2>
-            <form @submit.prevent="register">
-                <div class="form-group">
-                    <label for="username">{{ $t('auth.username') }}</label>
-                    <input @input="debouncedCheckUsername" required type="login" v-onlyEng id="username_up" v-model="username_up" class="form-control">
-                    <div>{{ username_up_error }}</div>
-                </div>
-                <div class="form-group">
-                    <label for="password">{{ $t('auth.password') }}</label>
-                    <input required type="password" id="password_up" v-model="password_up" class="form-control">
-                </div>
-                <button type="submit" class="btn btn-primary">Register</button>
-            </form>
-        </div>
-        
-        <div v-else-if="currentHash === '#signin'">
-            <h2>Login</h2>
-            <form @submit.prevent="login">
-                <div class="form-group">
-                    <label for="username">{{ $t('auth.username') }}</label>
-                    
-                    <input required type="login" v-onlyEng id="username_in" v-model="username_in" class="form-control">
-                    
-                </div>
-                <div class="form-group">
-                    <label for="password">{{ $t('auth.password') }}</label>
-                    <input required type="password" id="password_in" v-model="password_in" class="form-control">
-                </div>
-                <button type="submit" class="btn btn-primary">Login</button>
-            </form>
-        </div>
+        <!-- Отображение формы в зависимости от хэша -->
+        <component :is="currentComponent" />
     </div>
 </template>
 
 <script>
-import router from '@/router';
-import nt from '@/services/notificationService';
-import apiClient from '@/services/api';
+import SignInForm from './SignInForm.vue';
+import SignUpForm from './SignUpForm.vue';
 
 export default {
     name: 'UserAuth',
-    
+    components: {
+        SignInForm,
+        SignUpForm,
+    },
     data() {
         return {
-            username_in: '',
-            password_in: '',
-            username_up: '',
-            username_up_error: '',
-            password_up: '',
             currentHash: window.location.hash || '#signin',
             hashChangeHandler: null,
         };
     },
+    computed: {
+        currentComponent() {
+            // Возвращаем компонент в зависимости от хэша
+            return this.currentHash === '#signup' ? 'SignUpForm' : 'SignInForm';
+        },
+    },
     methods: {
-       
-        async checkUsername() {
-        if (this.username_up === '') {
-            this.username_up_error = ''; // Очищаем ошибку, если поле пустое
-            return;
-        }
-
-        try {
-            const response = await apiClient.get(`/check_username/?username=${this.username_up}`);
-            if (!response.data.available) {
-            this.username_up_error = this.$t('auth.error.auth.USER-001');
-            } else {
-            this.username_up_error = '';
-            }
-        } catch (error) {
-            console.error('Ошибка при проверке имени пользователя:', error);
-            this.username_up_error = 'Произошла ошибка при проверке.';
-        }
-        },
-
-        debounce(func, delay) {
-        let timeoutId;
-        return function (...args) {
-            clearTimeout(timeoutId); // Очищаем предыдущий таймер
-            timeoutId = setTimeout(() => func.apply(this, args), delay); // Устанавливаем новый таймер
-        };
-        },
-        
         navigateTo(hash) {
             window.location.hash = hash;
             this.currentHash = hash;
-        },
-        async login() {
-            try {
-                const params = new URLSearchParams();
-                params.append('username', this.username_in);
-                params.append('password', this.password_in);
-
-                const response = await apiClient.post('/token', params);
-                if (typeof localStorage !== 'undefined') {
-                    localStorage.setItem('token', response.data.access_token);
-                    router.push('/my')
-                }
-            } catch (error) {
-                nt.showNotification('error',this.$t('auth.error.auth.AUTH-001'), 2000);
-            }
-        },
-        async register() {
-            try {
-                let response = await apiClient.post('/register', {
-                    username: this.username_up,
-                    password: this.password_up,
-                });
-                
-                if (typeof localStorage !== 'undefined') {
-                    localStorage.setItem('token', response.data.access_token);
-                    router.push('/my')
-                }
-                
-            } catch (error) {
-                let fk = Object.keys(error.response.data.detail)[0];
-                let error_message = this.$t(`auth.error.password.${fk}`);
-                nt.showNotification('error',error_message)
-            }
         },
     },
     mounted() {
         this.changeTitle = () => {
             switch (this.currentHash) {
                 case "#signin":
-                    document.title = 'Авторизация'; break;    
+                    document.title = 'Авторизация';
+                    break;
                 case "#signup":
-                    document.title = 'Регистрация'; break;
+                    document.title = 'Регистрация';
+                    break;
             }
         };
 
         this.hashChangeHandler = () => {
             this.currentHash = window.location.hash;
-            this.changeTitle()
+            this.changeTitle();
         };
 
         window.addEventListener('hashchange', this.hashChangeHandler);
@@ -146,14 +57,8 @@ export default {
             window.removeEventListener('hashchange', this.hashChangeHandler);
         }
     },
-    computed: {
-    debouncedCheckUsername() {
-      return this.debounce(this.checkUsername, 600); // Задержка 400 мс
-    }
-  }
 };
 </script>
 
 <style scoped>
-
 </style>
