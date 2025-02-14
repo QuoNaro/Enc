@@ -1,9 +1,19 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from auth.routes import router as auth_routes
+from pm.routes import router as pm_routes
+from contextlib import asynccontextmanager
+from db import Base,engine
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    Base.metadata.create_all(engine)
+    # Таблицы созданы
+    yield
+    
+    
+app = FastAPI(lifespan=lifespan)
 
-app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
@@ -13,8 +23,15 @@ app.add_middleware(
     allow_headers=["Content-Type", "Authorization"],
 )
 
+
+
 # Подключение маршрутов
 app.include_router(auth_routes)
+app.include_router(pm_routes)
+
+
+
+
 
 
 

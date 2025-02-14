@@ -1,43 +1,30 @@
 from fastapi import APIRouter, Depends
 
-from .schemas import Token,UserCreate, UserResponse
-from .database import get_db
-from .password_model import Password
-from .security import authenticate_user,get_current_user ,get_password_hash,get_user,create_access_token
+from .password_validator import Password
+from .schemas import Token,UserCreate, PasswordRequest
+from  db import get_db
+from .security import authenticate_user,create_access_token, register_user
 from .models import User
-
+from pm.models import Permission
 from fastapi import HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
 
+
 router = APIRouter()
 
 @router.post("/register", response_model=Token)
-def register(user: UserCreate, db: Session = Depends(get_db)):
-    # Проверяем валидность пароля
-    password = Password(password=user.password)
-    if not password.is_valid:
-        raise HTTPException(status_code=422, detail=password.validation_errors)
-    
-    # Проверяем, существует ли пользователь с таким именем
-    db_user = get_user(db, user.username)  # Убран параметр password
-    if db_user:
-        raise HTTPException(status_code=400, detail="Username already registered")
-    
-    # Хэшируем пароль и создаем нового пользователя
-    hashed_password = get_password_hash(user.password)
-    db_user = User(username=user.username, hashed_password=hashed_password)
-    db.add(db_user)
-    db.commit()
-    db.refresh(db_user)
-    
+async def register(user: UserCreate, db: Session = Depends(get_db)):
+    # Регистрируем пользователя
+    new_user = register_user(user, db)
+
     # Создаем токен доступа
-    access_token = create_access_token(data={"sub": db_user.username})
+    access_token = create_access_token(data={"sub": new_user.username})
     return {"access_token": access_token, "token_type": "bearer"}
 
 @router.post("/token", response_model=Token)
-def login_for_access_token(db: Session = Depends(get_db), form_data: OAuth2PasswordRequestForm = Depends()):
+async def login_for_access_token(db: Session = Depends(get_db), form_data: OAuth2PasswordRequestForm = Depends()):
     user = authenticate_user(db, form_data.username, form_data.password)
     if not user:
         raise HTTPException(
@@ -48,10 +35,6 @@ def login_for_access_token(db: Session = Depends(get_db), form_data: OAuth2Passw
     access_token = create_access_token(data={"sub": user.username})
     return {"access_token": access_token, "token_type": "bearer"}
 
-@router.post('/my', response_model=UserResponse)
-def read_users_me(current_user: User = Depends(get_current_user)):
-    return current_user
-
 @router.get("/check_username/")
 async def check_username(username: str, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.username == username).first()
@@ -59,3 +42,32 @@ async def check_username(username: str, db: Session = Depends(get_db)):
     if user:
         return {"available": False, "message": "Username already taken"}
     return {"available": True, "message": "Username is available"}
+
+@router.post("/register/admin", response_model=Token)
+async def register_admin(user: UserCreate, db: Session = Depends(get_db)):
+    # Регистрируем пользователя
+    new_user = register_user(user, db)
+
+    # Добавляем права админа этому пользователю     
+    for perm in ["edit","read"]:
+        new_perm = Permission(entity_type="user", entity_id=new_user.id, permission=perm)
+        db.add(new_perm)
+    db.commit()
+    
+    # Создаем токен доступа
+    access_token = create_access_token(data={"sub": new_user.username})
+    return {"access_token": access_token, "token_type": "bearer"}
+
+
+@router.get('/api/get-password-settings')
+async def get_settings_for_vue():
+    from settings import PasswordSettings
+    return PasswordSettings().model_dump()
+
+@router.post('/api/validate-password')
+async def validate_password(password : PasswordRequest):
+    password = Password(password=password.password)
+    valid = password.is_valid
+    errors = password.validation_errors
+    result = {'is_valid' : valid, 'errors' : errors }
+    return result

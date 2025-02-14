@@ -31,7 +31,7 @@
             } catch (error) {
                 this.$router.push({ name: 'UserAuth' })
             }
-            }
+        }
     },
   };
   </script>

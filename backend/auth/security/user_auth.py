@@ -3,11 +3,11 @@ from typing import Optional
 from fastapi import Depends, HTTPException, status
 from jose import JWTError, jwt
 from sqlalchemy.orm import Session
-from auth.schemas import TokenData
-from auth.database import get_db
+from auth.schemas import TokenData, UserCreate
+from db import get_db
 from auth.models import User
 from settings import ALGORITHM, OAUTH2_SCHEME, AppSettings
-from .password import verify_password
+from .password import get_password_hash, verify_password
 
 SETTINGS = AppSettings()
 SECRET_KEY = SETTINGS.secret_key
@@ -67,10 +67,7 @@ def get_user(
     return db.query(User).filter(User.username == username).first()
 
 
-def authenticate_user(
-    db: "Session", 
-    username: str, 
-    password: str
+def authenticate_user(db: "Session", username: str, password: str
 ) -> Optional["User"]:
     """
     Аутентифицирует пользователя.
@@ -87,3 +84,21 @@ def authenticate_user(
     if not user or not verify_password(password, user.hashed_password):
         return None
     return user
+
+
+def register_user(user_data: UserCreate, db: Session) -> Optional[None | User]:
+    
+
+    # Проверяем, существует ли пользователь с таким именем
+    db_user = get_user(db, user_data.username)
+    if db_user:
+        raise HTTPException(status_code=400, detail="Username already registered")
+
+    # Хэшируем пароль и создаем нового пользователя
+    hashed_password = get_password_hash(user_data.password)
+    new_user = User(username=user_data.username, hashed_password=hashed_password)
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+
+    return new_user

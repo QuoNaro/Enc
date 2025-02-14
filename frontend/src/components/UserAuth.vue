@@ -9,13 +9,21 @@
                 <div class="form-group">
                     <label for="username">{{ $t('auth.username') }}</label>
                     <input @input="debouncedCheckUsername" required type="login" v-onlyEng id="username_up" v-model="username_up" class="form-control">
-                    <div>{{ username_up_error }}</div>
+                    <div>
+                        
+
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="password">{{ $t('auth.password') }}</label>
-                    <input required type="password" id="password_up" v-model="password_up" class="form-control">
+                    <input @input="debouncedValidatePassword" required type="password" id="password_up" v-model="password_up" class="form-control">
                 </div>
-                <button type="submit" class="btn btn-primary">Register</button>
+                <template v-if="password_errors">
+                    <li v-for="(item, index) in password_errors" :key="index">
+                        {{ index + 1 }}. {{ item }}
+                    </li>
+                </template>
+                <button :disabled="hasPasswordErrors" type="submit" class="btn btn-primary">Register</button>
             </form>
         </div>
         
@@ -39,9 +47,9 @@
 </template>
 
 <script>
-import router from '@/router';
 import nt from '@/services/notificationService';
 import apiClient from '@/services/api';
+import debounce from '@/services/debounce';
 
 export default {
     name: 'UserAuth',
@@ -53,6 +61,7 @@ export default {
             username_up: '',
             username_up_error: '',
             password_up: '',
+            password_errors: {},
             currentHash: window.location.hash || '#signin',
             hashChangeHandler: null,
         };
@@ -60,31 +69,41 @@ export default {
     methods: {
        
         async checkUsername() {
-        if (this.username_up === '') {
-            this.username_up_error = ''; // Очищаем ошибку, если поле пустое
-            return;
-        }
-
-        try {
-            const response = await apiClient.get(`/check_username/?username=${this.username_up}`);
-            if (!response.data.available) {
-            this.username_up_error = this.$t('auth.error.auth.USER-001');
-            } else {
-            this.username_up_error = '';
+            if (this.username_up === '') {
+                this.username_up_error = ''; // Очищаем ошибку, если поле пустое
+                return;
             }
-        } catch (error) {
-            console.error('Ошибка при проверке имени пользователя:', error);
-            this.username_up_error = 'Произошла ошибка при проверке.';
-        }
+
+            try {
+                const response = await apiClient.get(`/check_username/?username=${this.username_up}`);
+                if (!response.data.available) {
+                this.username_up_error = this.$t('auth.error.auth.USER-001');
+                } else {
+                this.username_up_error = '';
+                }
+            } 
+            catch (error) {
+                console.error('Ошибка при проверке имени пользователя:', error);
+                this.username_up_error = 'Произошла ошибка при проверке.';
+            }
         },
 
-        debounce(func, delay) {
-        let timeoutId;
-        return function (...args) {
-            clearTimeout(timeoutId); // Очищаем предыдущий таймер
-            timeoutId = setTimeout(() => func.apply(this, args), delay); // Устанавливаем новый таймер
-        };
+
+        async validatePassword() {
+
+            try {
+                const response = await apiClient.post(`/api/validate-password`,{
+                    password : this.password_up
+                });
+                console.log(response)
+            } 
+            catch (error) {
+                console.log('respo')
+               
+            }
         },
+
+        
         
         navigateTo(hash) {
             window.location.hash = hash;
@@ -99,7 +118,7 @@ export default {
                 const response = await apiClient.post('/token', params);
                 if (typeof localStorage !== 'undefined') {
                     localStorage.setItem('token', response.data.access_token);
-                    router.push('/my')
+                    
                 }
             } catch (error) {
                 nt.showNotification('error',this.$t('auth.error.auth.AUTH-001'), 2000);
@@ -114,13 +133,13 @@ export default {
                 
                 if (typeof localStorage !== 'undefined') {
                     localStorage.setItem('token', response.data.access_token);
-                    router.push('/my')
+                    
                 }
                 
             } catch (error) {
-                let fk = Object.keys(error.response.data.detail)[0];
-                let error_message = this.$t(`auth.error.password.${fk}`);
-                nt.showNotification('error',error_message)
+                // Обработка ошибок
+                this.password_errors = error.response.data.detail
+
             }
         },
     },
@@ -147,9 +166,18 @@ export default {
         }
     },
     computed: {
-    debouncedCheckUsername() {
-      return this.debounce(this.checkUsername, 600); // Задержка 400 мс
-    }
+        debouncedCheckUsername() {
+        return debounce(this.checkUsername, 600); // Задержка 400 мс
+        },
+        
+        debouncedValidatePassword() {
+            return debounce(this.validatePassword,500)
+        },
+
+        hasPasswordErrors() {
+        // Проверяем, что объект не пустой
+        return Object.keys(this.password_errors).length > 0;
+        },
   }
 };
 </script>
