@@ -1,19 +1,27 @@
 <template>
-    <div>
-        <h2>Login</h2>
-        <form @submit.prevent="login">
-            <div class="form-group">
-                <label for="username">{{ $t('auth.username') }}</label>
-                <input required type="login" v-onlyEng id="username_in" v-model="username_in" class="form-control">
-            </div>
-            <div class="form-group">
-                <label for="password">{{ $t('auth.password') }}</label>
-                <input required type="password" id="password_in" v-model="password_in" class="form-control">
-            </div>
-            <button type="submit" class="btn btn-primary">Login</button>
-        </form>
-    </div>
-</template>
+    <form @submit.prevent="login" class="auth-form">
+      <div class="form-group">
+        <label for="username">{{ $t('auth.username') }}</label>
+        <input 
+          required 
+          type="text" 
+          id="username" 
+          v-model="username" 
+          class="form-control">
+
+      </div>
+      <div class="form-group">
+        <label for="password">{{ $t('auth.password') }}</label>
+        <input 
+          required 
+          type="password" 
+          id="password" 
+          v-model="password" 
+          class="form-control">
+      </div>
+      <button type="submit" class="btn btn-primary submit-button">{{ $t('auth.login') }}</button>
+    </form>
+  </template>
 
 <script>
 import nt from '@/services/notificationService';
@@ -23,16 +31,16 @@ export default {
     name: 'SignInForm',
     data() {
         return {
-            username_in: '',
-            password_in: '',
+            username: '',
+            password: '',
         };
     },
     methods: {
         async login() {
             try {
                 const params = new URLSearchParams();
-                params.append('username', this.username_in);
-                params.append('password', this.password_in);
+                params.append('username', this.username);
+                params.append('password', this.password);
                 const response = await apiClient.post('/token', params);
                 if (typeof localStorage !== 'undefined') {
                     localStorage.setItem('token', response.data.access_token);
@@ -44,6 +52,3 @@ export default {
     },
 };
 </script>
-
-<style scoped>
-</style>

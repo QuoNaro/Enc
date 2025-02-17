@@ -10,6 +10,7 @@ import './assets/global.css';
 
 
 
+
 Vue.config.productionTip = false;
 
 // Директивы
