@@ -9,11 +9,11 @@
             </div>
             <div class="form-group">
                 <label for="password">{{ $t('auth.password') }}</label>
-                <input @input="debouncedValidatePassword" required type="password" id="password_up" v-password v-model="password_up" class="form-control">
+                <input @input="debouncedInputPassword" required type="password" id="password_up" v-password v-model="password_up" class="form-control">
             </div>
             <template v-if="password_errors">
-                <li v-for="(item) in password_errors" :key="item">
-                    {{ item }}
+                <li v-for="(code,item) in password_errors" :key="item">
+                    {{ code.message }}
                 </li>
             </template>
             <button :disabled="hasPasswordErrors" type="submit" class="btn btn-primary">Register</button>
@@ -22,8 +22,8 @@
 </template>
 
 <script>
-
 import apiClient from '@/services/api';
+import vp from '@/services/validatePassword';
 import debounce from '@/services/debounce';
 
 export default {
@@ -54,32 +54,26 @@ export default {
                 this.username_up_error = 'Произошла ошибка при проверке.';
             }
         },
-
-        async validatePassword() {
+        async inputPassword() {
             try {
-                if (this.password_up.trim() != "") {
-                    const response = await apiClient.post(`/api/validate-password`, {password: this.password_up});
-                    if (!response.data.is_valid) {
-                        this.password_errors = Object.values(response.data.errors)
-                    }
+                if (this.password_up.trim() !== "") {
+                    this.password_errors = vp.validatePassword(this.password_up, this.$appSettings) || [];
+                    console.log('hi')
+                    
+                } else {
+                    this.password_errors = []; // Очистите ошибки, если поле пустое
                 }
-                else { 
-                    this.password_errors = ""
-                }
-                
                 
             } catch (error) {
-                console.error(error)
+                console.error(error);
             }
         },
-
         async register() {
             try {
                 let response = await apiClient.post('/register', {
                     username: this.username_up,
                     password: this.password_up,
                 });
-
                 if (typeof localStorage !== 'undefined') {
                     localStorage.setItem('token', response.data.access_token);
                 }
@@ -88,13 +82,12 @@ export default {
             }
         },
     },
+    created() {
+        // Создаем дебаунсированные версии методов
+        this.debouncedCheckUsername = debounce(this.checkUsername, 1000);
+        this.debouncedInputPassword = debounce(this.inputPassword, 1000);
+    },
     computed: {
-        debouncedCheckUsername() {
-            return debounce(this.checkUsername, 1000);
-        },
-        debouncedValidatePassword() {
-            return debounce(this.validatePassword, 1000);
-        },
         hasPasswordErrors() {
             return Object.keys(this.password_errors).length > 0;
         },
