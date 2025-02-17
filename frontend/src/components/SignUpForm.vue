@@ -1,99 +1,111 @@
 <template>
-    <div>
-        <h2>Register</h2>
-        <form @submit.prevent="register">
-            <div class="form-group">
-                <label for="username">{{ $t('auth.username') }}</label>
-                <input @input="debouncedCheckUsername" required type="login" v-onlyEng id="username_up" v-model="username_up" class="form-control">
-                <div>{{ username_up_error }}</div>
-            </div>
-            <div class="form-group">
-                <label for="password">{{ $t('auth.password') }}</label>
-                <input @input="debouncedInputPassword" required type="password" id="password_up" v-password v-model="password_up" class="form-control">
-            </div>
-            <template v-if="password_errors">
-                <li v-for="(code,item) in password_errors" :key="item">
-                    {{ code.message }}
-                </li>
-            </template>
-            <button :disabled="hasPasswordErrors" type="submit" class="btn btn-primary">Register</button>
-        </form>
-    </div>
+    <form @submit.prevent="register" class="auth-form">
+      <div class="form-group">
+        <label for="username">{{ $t('auth.username') }}</label>
+        <input 
+          required 
+          type="text" 
+          id="username" 
+          v-onlyEng 
+          v-model="username" 
+          class="form-control"
+          @input="debouncedCheckUsername"
+        />
+        <div v-if="username_error" class="error-message">{{ username_error }}</div>
+      </div>
+      <div class="form-group">
+        <label for="password">{{ $t('auth.password') }}</label>
+        <input 
+          required 
+          type="password" 
+          id="password" 
+          v-model="password" 
+          class="form-control"
+          @input="debouncedInputPassword"
+        />
+        <ul v-if="password_errors.length > 0" class="error-list">
+          <li v-for="(error, index) in password_errors" :key="index" class="error-item">
+            {{ error.message }}
+          </li>
+        </ul>
+      </div>
+      <button :disabled="isButtonDisabled" type="submit" class="btn btn-primary submit-button">{{ $t('auth.register') }}</button>
+    </form>
 </template>
+  
+  <script>
+  import apiClient from '@/services/api';
+  import vp from '@/services/validatePassword';
+  import debounce from '@/services/debounce';
 
-<script>
-import apiClient from '@/services/api';
-import vp from '@/services/validatePassword';
-import debounce from '@/services/debounce';
 
-export default {
+  export default {
     name: 'SignUpForm',
     data() {
-        return {
-            username_up: '',
-            username_up_error: '',
-            password_up: '',
-            password_errors: {},
-        };
+      return {
+        username: '',
+        username_error: '',
+        password: '',
+        password_errors: [],
+      };
     },
     methods: {
-        async checkUsername() {
-            if (this.username_up === '') {
-                this.username_up_error = '';
-                return;
-            }
-            try {
-                const response = await apiClient.get(`/check_username/?username=${this.username_up}`);
-                if (!response.data.available) {
-                    this.username_up_error = this.$t('auth.error.auth.USER-001');
-                } else {
-                    this.username_up_error = '';
-                }
-            } catch (error) {
-                console.error('Ошибка при проверке имени пользователя:', error);
-                this.username_up_error = 'Произошла ошибка при проверке.';
-            }
-        },
-        async inputPassword() {
-            try {
-                if (this.password_up.trim() !== "") {
-                    this.password_errors = vp.validatePassword(this.password_up, this.$appSettings) || [];
-                    console.log('hi')
-                    
-                } else {
-                    this.password_errors = []; // Очистите ошибки, если поле пустое
-                }
-                
-            } catch (error) {
-                console.error(error);
-            }
-        },
-        async register() {
-            try {
-                let response = await apiClient.post('/register', {
-                    username: this.username_up,
-                    password: this.password_up,
-                });
-                if (typeof localStorage !== 'undefined') {
-                    localStorage.setItem('token', response.data.access_token);
-                }
-            } catch (error) {
-                this.password_errors = error.response.data.detail;
-            }
-        },
+      async checkUsername() {
+        if (this.username === '') {
+          this.username_error = '';
+          return;
+        }
+        try {
+          const response = await apiClient.get(`/check_username/?username=${this.username}`);
+          if (!response.data.available) {
+            this.username_error = this.$t('auth.error.auth.USER-001');
+          } else {
+            this.username_error = '';
+          }
+        } catch (error) {
+          console.error('Ошибка при проверке имени пользователя:', error);
+          this.username_error = 'Произошла ошибка при проверке.';
+        }
+      },
+      async inputPassword() {
+        try {
+          if (this.password.trim() !== "") {
+            this.password_errors = vp.validatePassword(this.password, this.$appSettings) || [];
+          } else {
+            this.password_errors = []; // Очистите ошибки, если поле пустое
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      },
+      async register() {
+        try {
+          let response = await apiClient.post('/register', {
+            username: this.username,
+            password: this.password,
+          });
+          if (typeof localStorage !== 'undefined') {
+            localStorage.setItem('token', response.data.access_token);
+          }
+        } catch (error) {
+          this.password_errors = error.response.data.detail;
+        }
+      },
     },
     created() {
-        // Создаем дебаунсированные версии методов
-        this.debouncedCheckUsername = debounce(this.checkUsername, 1000);
-        this.debouncedInputPassword = debounce(this.inputPassword, 1000);
+      this.debouncedCheckUsername = debounce(this.checkUsername, 1000);
+      this.debouncedInputPassword = debounce(this.inputPassword, 1000);
     },
     computed: {
-        hasPasswordErrors() {
-            return Object.keys(this.password_errors).length > 0;
-        },
-    },
-};
-</script>
-
-<style scoped>
-</style>
+      isButtonDisabled() {
+        return (
+          this.username.trim() === '' || // Логин пустой
+          this.password.trim() === '' || // Пароль пустой
+          this.password_errors.length > 0 || // Есть ошибки в пароле
+          this.username_error !== '' // Есть ошибки в логине
+        );
+      }
+    }
+  };
+  </script>
+  
