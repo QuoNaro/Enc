@@ -18,7 +18,8 @@
         <input 
           required 
           type="password" 
-          id="password" 
+          id="password"
+          v-password
           v-model="password" 
           class="form-control"
           @input="debouncedInputPassword"

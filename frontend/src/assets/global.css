@@ -16,6 +16,28 @@ body {
     align-items: center;
 }
 
+/* === Основные переменные цветов === */
+:root {
+    --primary-color: #1D2D44; /* Основной темно-синий цвет */
+    --secondary-color: #3E5C76; /* Вторичный серо-синий цвет */
+    --background-color: #F0EBD8; /* Светлый фоновый цвет */
+    --text-color: #0D1321; /* Темный цвет текста */
+    --accent-color: #748CAB; /* Акцентный светло-серый цвет */
+    --hover-color: #3E5C76; /* Цвет при наведении */
+    --border-color: #748cab65; /* Цвет границ */
+    --error-color: #FF5722; /* Цвет ошибки (оранжевый) */
+    --success-color: #4CAF50; /* Цвет успеха (зеленый) */
+    --white: #FFFFFF; /* Белый */
+    --black: #000000; /* Черный */
+    --shadow: #0000002d;
+    --picnic-url: url('./background.png')
+  }
 
-
-/* АВТОРИЗАЦИЯ */
+/* ШРИФТЫ */
+@font-face {
+    font-family: 'Arimo';
+    src: 
+      url('./fonts/Arimo.ttf') format('ttf');
+    font-weight: normal;
+    font-style: normal;
+  }

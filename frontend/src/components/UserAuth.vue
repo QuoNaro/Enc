@@ -1,24 +1,24 @@
 <template>
   <div class="main-container">
 
-      <div class="img-container">
-        <div class="img"></div>
-        <div class="buttons">
-          <a href="#signin">Логин</a>
-          <a href="#signup">Регистрация</a>
-        </div>
-      </div>
+    <div class="img-container">
+        <img src="@/assets/wave1.svg" alt="Wave 1" class="wave wave-1">
+        <img src="@/assets/wave2.svg" alt="Wave 2" class="wave wave-2">
+        <img src="@/assets/wave3.svg" alt="Wave 3" class="wave wave-3">
+    </div>
+      
+    
 
-      <transition name="expand">
-      <div class="auth-container"> 
-        <component :is="currentComponent" />
-      </div>
-    </transition>
+    
+    <div class="auth-container"> 
+      <component :is="currentComponent" />
+    </div>
+  
       
   </div>
 </template>
   
-  <script>
+<script>
   import SignInForm from './SignInForm.vue';
   import SignUpForm from './SignUpForm.vue';
   import '@/assets/auth.css';
@@ -71,11 +71,13 @@
       }
     },
   };
-  </script>
+</script>
   
-  <style lang="scss">
+<style lang="scss">
+
 
   .main-container {
+    font-family: 'Arimo';
     display: flex;
     flex-direction: row;
     width: 65%;
@@ -89,22 +91,42 @@
 
   }
 
-
   .buttons {
     display: flex;
     position: absolute;
+    height: 20%;
+    right: 0%; /* Центрирование по горизонтали */
+    flex-direction: column;
+    justify-content: space-between;
+
+    * {
+      background-color: white;
+      color: black;
+      padding: 10px;
+      box-sizing: border-box;
+      text-decoration: none;
+      font-family: 'Arimo';
+      font-weight: 900;
+      text-transform: uppercase;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.6em;
+      border-radius: 15px 0 0px 15px;
+      text-align: center;
+    }
+
+    a:nth-child(1) {
+
+
+    }
+
+    a:nth-child(2) {
+
+
+    }
   }
 
 
-  .img {
-    background-image: var(--picnic-url);
-    border-radius: 1.2em;
-    width: 100%;
-    height:100%;
-    object-position:center ;
-    background-size: cover;
-    object-fit: cover;
-  }
   
   .auth-container {
 
@@ -128,9 +150,7 @@
     }
   }
 
-  .img-container {
-    width: 100%;
-  }
+ 
 
   .auth-container,.img-container {
     position: relative;
@@ -148,8 +168,10 @@
     padding: 20px;
     background-color: #fff;
     border-radius: 20px;
-    border: 2px solid var(--border-color); 
-  
+    
+    border: 1px solid var(--border-color); 
+
+
     .form-group {
       margin-bottom: 20px;
       width: 100%;
@@ -197,9 +219,12 @@
       padding: 10px 20px;
       border: none;
       border-radius: 25px;
+      font-weight: 900;
+      text-align: center;
+      text-transform: uppercase;
       background-color: var(--secondary-color);
       color: #fff;
-      font-size: 16px;
+      font-size: 14px;
       cursor: pointer;
       transition: background-color 0.3s ease;
   
@@ -213,4 +238,78 @@
       }
     }
   }
-  </style>
+
+ 
+  @keyframes wavy {
+    0% {
+      transform: translateY(0%);
+      rotate: 1deg;
+    }
+    25% {
+      transform: translateY(10%);
+      rotate: -1deg;
+    }
+
+
+    50% {
+     
+      transform: translateY(0%);
+      rotate: 1deg;
+
+    }
+
+    75% {
+      transform: translateY(10%);
+      rotate: -1deg;
+    }
+
+    100%  {
+      transform: translateY(0%);
+      rotate: 1deg;
+
+    } 
+  }
+
+  
+  
+  @mixin no-select {
+  user-select: none; // Стандартное свойство
+  -webkit-user-select: none; // Для старых версий Safari
+  -moz-user-select: none; // Для Firefox
+  -ms-user-select: none; // Для Internet Explorer
+
+  pointer-events: none; // Опционально: отключает все события мыши
+}
+
+
+  .img-container {
+    width: 100%;
+    border: 1px solid var(--border-color);
+    
+    box-shadow: var(--shadow) 0 0 20px;
+    height: 100%;
+    
+    border-radius: 20px;
+    overflow: hidden;
+  }
+
+  .wave { 
+    display: flex;
+    transform-origin: center;
+    @include no-select;
+    position: absolute;
+    left: -20%;
+    width: 150%;
+    bottom: -5%;
+
+
+  }
+
+  
+  .wave-3{ animation: wavy ease-in-out 10s infinite; animation-delay: 1s;}
+  .wave-2{ animation: wavy ease-in-out 10s infinite; animation-delay: 0.5s;}
+  .wave-1{ animation: wavy ease-in-out 10s infinite}
+
+  
+  
+</style>

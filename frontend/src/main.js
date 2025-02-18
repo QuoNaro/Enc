@@ -5,7 +5,6 @@ import router from './router';
 import i18n from '@/services/i18n';
 
 // Стили
-import './assets/colors.css';
 import './assets/global.css';
 
 
