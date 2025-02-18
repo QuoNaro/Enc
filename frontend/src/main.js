@@ -3,6 +3,7 @@ import Vue from 'vue';
 import App from './App.vue';
 import router from './router';
 import i18n from '@/services/i18n';
+import { gsap } from "gsap";
 
 // Стили
 import './assets/global.css';
@@ -25,8 +26,8 @@ import settingsPlugin from '@/plugins/settingsPlugin';
 Vue.use(settingsPlugin)
 Vue.use(formatPlugin)
 
-
-
+// Добавление модуля анимаций
+Vue.prototype.$gsap = gsap;
 
 new Vue({
   router,
