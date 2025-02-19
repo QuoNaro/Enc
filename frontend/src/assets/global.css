@@ -16,6 +16,10 @@ body {
     align-items: center;
 }
 
+#app {
+  background-color: var(--background-color)
+}
+
 /* === Основные переменные цветов === */
 :root {
     --primary-color: #1D2D44; /* Основной темно-синий цвет */

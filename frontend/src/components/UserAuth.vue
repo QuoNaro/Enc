@@ -1,5 +1,5 @@
 <template>
-  <div class="background-container">
+ 
     <div class="main-container">
 
       <div class="img-container">
@@ -17,7 +17,7 @@
 
         
       </div>
-  </div>
+
   
 </template>
   
@@ -78,15 +78,6 @@
   
 <style lang="scss">
 
-  .background-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    width: 100%;
-    background-color: var(--background-color)
-  }
 
   .main-container {
     font-family: 'Arimo';
