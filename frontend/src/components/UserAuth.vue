@@ -1,21 +1,24 @@
 <template>
-  <div class="main-container">
+  <div class="background-container">
+    <div class="main-container">
 
-    <div class="img-container">
-        <img src="@/assets/wave1.svg" alt="Wave 1" class="wave wave-1">
-        <img src="@/assets/wave2.svg" alt="Wave 2" class="wave wave-2">
-        <img src="@/assets/wave3.svg" alt="Wave 3" class="wave wave-3">
-    </div>
-      
-    
+      <div class="img-container">
+          <img src="@/assets/wave1.svg" alt="Wave 1" class="wave wave-1">
+          <img src="@/assets/wave2.svg" alt="Wave 2" class="wave wave-2">
+          <img src="@/assets/wave3.svg" alt="Wave 3" class="wave wave-3">
+      </div>
+        
 
-    
-    <div class="auth-container"> 
-      <component :is="currentComponent" />
-    </div>
-  
-      
+
+
+      <div class="auth-container"> 
+        <component :is="currentComponent" />
+      </div>
+
+        
+      </div>
   </div>
+  
 </template>
   
 <script>
@@ -75,6 +78,15 @@
   
 <style lang="scss">
 
+  .background-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100%;
+    background-color: var(--background-color)
+  }
 
   .main-container {
     font-family: 'Arimo';
@@ -98,23 +110,6 @@
     right: 0%; /* Центрирование по горизонтали */
     flex-direction: column;
     justify-content: space-between;
-
-    * {
-      background-color: white;
-      color: black;
-      padding: 10px;
-      box-sizing: border-box;
-      text-decoration: none;
-      font-family: 'Arimo';
-      font-weight: 900;
-      text-transform: uppercase;
-      justify-content: center;
-      align-items: center;
-      font-size: 1.6em;
-      border-radius: 15px 0 0px 15px;
-      text-align: center;
-    }
-
 
   }
 

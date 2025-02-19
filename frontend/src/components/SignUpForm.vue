@@ -87,6 +87,9 @@
           });
           if (typeof localStorage !== 'undefined') {
             localStorage.setItem('token', response.data.access_token);
+            this.$router.push('/');
+          } else {
+            console.error('localStorage is not available');
           }
         } catch (error) {
           this.password_errors = error.response.data.detail;

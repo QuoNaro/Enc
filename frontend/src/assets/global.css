@@ -20,7 +20,7 @@ body {
 :root {
     --primary-color: #1D2D44; /* Основной темно-синий цвет */
     --secondary-color: #3E5C76; /* Вторичный серо-синий цвет */
-    --background-color: #F0EBD8; /* Светлый фоновый цвет */
+    --background-color: #e8eaf6; /* Светлый фоновый цвет */
     --text-color: #0D1321; /* Темный цвет текста */
     --accent-color: #748CAB; /* Акцентный светло-серый цвет */
     --hover-color: #3E5C76; /* Цвет при наведении */

@@ -1,9 +1,15 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import UserAuth from '@/components/UserAuth.vue';
-import NotFound from '@/components/Error/NotFound.vue';
 import nt from '@/services/notificationService'
 import i18n from '@/services/i18n';
+
+// Components
+import UserAuth from '@/components/UserAuth.vue';
+import NotFound from '@/components/Error/NotFound.vue';
+import MainPage from '@/components/MainPage.vue';
+
+
+
 
 Vue.use(Router);
 
@@ -17,6 +23,13 @@ const routes = [
       { path: '#signup' }
     ]
   },
+  {
+    path: '/',
+    name: 'MainPage',
+    component: MainPage,
+  },
+
+
   {
     path: '*',
     name: 'NotFound',

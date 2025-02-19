@@ -44,6 +44,7 @@ export default {
                 const response = await apiClient.post('/token', params);
                 if (typeof localStorage !== 'undefined') {
                     localStorage.setItem('token', response.data.access_token);
+                    this.$router.push('/');
                 }
             } catch (error) {
                 nt.showNotification('error', this.$t('auth.error.auth.AUTH-001'), 2000);
