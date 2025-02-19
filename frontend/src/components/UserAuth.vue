@@ -115,15 +115,7 @@
       text-align: center;
     }
 
-    a:nth-child(1) {
 
-
-    }
-
-    a:nth-child(2) {
-
-
-    }
   }
 
 
@@ -217,6 +209,7 @@
     .submit-button {
       margin-top: 20px;
       padding: 10px 20px;
+      overflow: hidden;
       border: none;
       border-radius: 25px;
       font-weight: 900;
@@ -226,6 +219,9 @@
       color: #fff;
       font-size: 14px;
       cursor: pointer;
+      justify-content: center;
+      align-items: center;
+      display: flex;
       transition: background-color 0.3s ease;
   
       &:hover {
