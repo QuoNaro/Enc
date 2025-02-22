@@ -1,0 +1,110 @@
+
+/* Main Container */
+.main-container {
+  font-family: var(--font-family);
+  display: flex;
+  flex-direction: row;
+  width: clamp(300px, 65%, 1200px); /* Адаптивная ширина */
+  padding: 20px;
+  box-sizing: border-box;
+  background-color: white;
+  height: 85%;
+  border-radius: 2em;
+  box-shadow: var(--shadow) 0px 0px 30px;
+  gap: 20px;
+}
+
+/* Buttons */
+.buttons {
+  display: flex;
+  position: absolute;
+  top: 50%; /* Вертикальное центрирование */
+  right: 20px; /* Отступ справа */
+  transform: translateY(-50%); /* Центрирование по вертикали */
+  flex-direction: column;
+  justify-content: space-between;
+  height: fit-content;
+}
+
+/* Auth Form */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 20px;
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+  width: 100%;
+  max-width: 500px;
+}
+
+/* Form Group */
+.form-group {
+  margin-bottom: 15px;
+  width: 100%;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 14px;
+  color: #666;
+}
+
+.form-group input[type="text"],
+.form-group input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+
+  &:focus {
+    border-color: var(--hover-color);
+    outline: none;
+  }
+}
+
+/* Error Messages */
+.error-message,
+.error-list {
+  margin-top: 5px;
+  color: var(--error-color);
+  font-size: 12px;
+}
+
+.error-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+/* Submit Button */
+.submit-button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 25px;
+  font-weight: bold;
+  text-align: center;
+  text-transform: uppercase;
+  background-color: var(--secondary-color);
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.3s ease;
+
+  &:hover:not(:disabled) {
+    background-color: var(--primary-color);
+  }
+
+  &:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+}

@@ -17,14 +17,21 @@ body {
 }
 
 #app {
-  background-color: var(--background-color)
+  background-color: var(--background-color);
+  height: 100vh; /* Растягиваем #app на всю высоту viewport */
+  width: 100%;   /* Занимает всю ширину окна */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
 /* === Основные переменные цветов === */
 :root {
     --primary-color: #1D2D44; /* Основной темно-синий цвет */
-    --secondary-color: #3E5C76; /* Вторичный серо-синий цвет */
+    --secondary-color: #1d2731; /* Вторичный серо-синий цвет */
     --background-color: #e8eaf6; /* Светлый фоновый цвет */
+    --gray-light-color: #c2c2c2;
     --text-color: #0D1321; /* Темный цвет текста */
     --accent-color: #748CAB; /* Акцентный светло-серый цвет */
     --hover-color: #3E5C76; /* Цвет при наведении */
@@ -34,14 +41,5 @@ body {
     --white: #FFFFFF; /* Белый */
     --black: #000000; /* Черный */
     --shadow: #0000002d;
-    --picnic-url: url('./background.png')
   }
 
-/* ШРИФТЫ */
-@font-face {
-    font-family: 'Arimo';
-    src: 
-      url('./fonts/Arimo.ttf') format('ttf');
-    font-weight: normal;
-    font-style: normal;
-  }

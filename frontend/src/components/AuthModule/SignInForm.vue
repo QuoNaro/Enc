@@ -53,3 +53,5 @@ export default {
     },
 };
 </script>
+
+<style lang="scss" src="@/assets/styles/auth.scss" scoped></style>

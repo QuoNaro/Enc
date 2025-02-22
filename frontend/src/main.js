@@ -6,9 +6,8 @@ import i18n from '@/services/i18n';
 import { gsap } from "gsap";
 
 // Стили
-import './assets/global.css';
-
-
+import './assets/styles/global.css';
+import './assets/styles/fonts.css';
 
 
 Vue.config.productionTip = false;

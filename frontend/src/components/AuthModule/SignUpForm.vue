@@ -39,7 +39,6 @@
   import vp from '@/services/validatePassword';
   import debounce from '@/services/debounce';
 
-
   export default {
     name: 'SignUpForm',
     data() {
@@ -113,3 +112,4 @@
   };
   </script>
   
+<style lang="scss" src="@/assets/styles/auth.scss" scoped></style>

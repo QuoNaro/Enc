@@ -1,9 +1,0 @@
-/* main.css */
-#app {
-    height: 100vh; /* Растягиваем #app на всю высоту viewport */
-    width: 100%;   /* Занимает всю ширину окна */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-  }

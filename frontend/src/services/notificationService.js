@@ -1,5 +1,5 @@
 import Vue from "vue";
-import AppNotification from "@/components/AppNotification.vue";
+import AppNotification from "@/components/ExtraModules/AppNotification.vue";
 
 export default {
   notificationQueue: [], // Список активных уведомлений

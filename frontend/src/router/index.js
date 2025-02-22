@@ -4,8 +4,8 @@ import nt from '@/services/notificationService'
 import i18n from '@/services/i18n';
 
 // Components
-import UserAuth from '@/components/UserAuth.vue';
-import NotFound from '@/components/Error/NotFound.vue';
+import NotFound from '@/components/ErrorModule/NotFound.vue';
+import UserAuth from '@/components/AuthModule/UserAuth.vue';
 import MainPage from '@/components/MainPage.vue';
 
 
@@ -19,7 +19,7 @@ const routes = [
     name: 'UserAuth',
     component: UserAuth,
     children: [
-      { path: '#signin' },
+      { path: '#zsignin' },
       { path: '#signup' }
     ]
   },
