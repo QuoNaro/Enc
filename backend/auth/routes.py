@@ -58,7 +58,6 @@ async def register_admin(user: UserCreate, db: Session = Depends(get_db)):
     access_token = create_access_token(data={"sub": new_user.username})
     return {"access_token": access_token, "token_type": "bearer"}
 
-
 @router.get('/api/get-password-settings')
 async def get_settings_for_vue():
     from settings import PasswordSettings
