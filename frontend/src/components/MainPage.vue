@@ -37,7 +37,7 @@
         background-color: $secondary;
         height: 100%;
         display: flex;
-        width: 30%;
+        width: 350px;
         display: flex;
         flex-direction: column;
         align-items: center;

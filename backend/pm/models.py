@@ -5,7 +5,7 @@ from db import Base, get_db
 class Password(Base):
     __tablename__ = "passwords"
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("user.id"), nullable=False)
     
 
 # Модель Group

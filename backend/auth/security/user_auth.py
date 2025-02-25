@@ -88,7 +88,6 @@ def authenticate_user(db: "Session", username: str, password: str
 
 def register_user(user_data: UserCreate, db: Session) -> Optional[None | User]:
     
-
     # Проверяем, существует ли пользователь с таким именем
     db_user = get_user(db, user_data.username)
     if db_user:
