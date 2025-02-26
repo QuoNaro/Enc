@@ -6,8 +6,8 @@ from sqlalchemy.orm import Session
 from apps.auth.schemas import TokenData, UserCreate
 from db import get_db
 from apps.auth.models import User
-from apps.pm.models import Vault
-from lib.controller import init_new_user
+
+from lib.enc import init_new_user, init_default_group
 from settings import ALGORITHM, OAUTH2_SCHEME, AppSettings
 from .password import get_password_hash, verify_password
 
@@ -101,8 +101,7 @@ def register_user(user_data: UserCreate, db: Session) -> Optional[None | User]:
     # Создание нового пользователя
     new_user = User(username=user_data.username, hashed_password=hashed_password)
     
-    # Инициализация новоого пользователя в файловой системе
-    init_new_user(db_user = new_user, password=user_data.password)
+
     
     
     db.add
