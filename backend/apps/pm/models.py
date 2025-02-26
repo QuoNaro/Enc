@@ -1,5 +1,5 @@
 from sqlalchemy import Column, ForeignKey, Integer, String
-from auth.models import User
+from apps.auth.models import User
 from db import Base, get_db
 
 class Password(Base):
@@ -7,7 +7,6 @@ class Password(Base):
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("user.id"), nullable=False)
     
-
 # Модель Group
 class Group(Base):
     __tablename__ = "groups"
@@ -31,3 +30,9 @@ class Permission(Base):
         elif self.entity_type == "group":
             return session.query(Group).get(self.entity_id)
         return None
+    
+class Vault(Base):
+    __tablename__ = "vault"
+    id = Column(Integer,primary_key=True, index=True)
+    name = Column(String,nullable=False)
+    

@@ -2,12 +2,21 @@
 <div class="main-container">
     <div class="vault-container">
         <div class="vault chapter">
-            <h3 class="title">{{ $t('main.safes') }}
+            <h3 class="title">{{ $t('main.my-safe') }}
                 <img class="icon" src="@/assets/icons/safe-icon.svg" alt="">
             </h3>
             <div class="hr"></div>
         </div>
-        <div class="password chapter"></div>
+        <div class="password chapter">
+            <h3 class="title">{{ $t('main.my-rights') }}
+                <img class="icon" src="@/assets/icons/lock-icon.svg" alt="">
+            </h3>
+            <div class="hr"></div>
+        </div>
+    </div>
+
+    <div class="info-container">
+        <div class="header"></div>
     </div>
 
 </div>  
@@ -32,7 +41,22 @@
         height: calc(100% - 50px); // Корректируем высоту с учетом margin
         box-shadow: $shadow 0px 0px 30px;
     }
+    
+    .info-container {
+        width: 100%;
+        height: 100%;
+
         
+        
+        .header{
+            width: 100%;
+            background-color: var(--gray-blue-color);
+            height: 100px;
+        }
+        
+    }
+
+
     .vault-container {
         background-color: $secondary;
         height: 100%;

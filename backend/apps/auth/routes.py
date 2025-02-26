@@ -5,7 +5,7 @@ from .schemas import Token,UserCreate, PasswordRequest
 from  db import get_db
 from .security import authenticate_user,create_access_token, register_user
 from .models import User
-from pm.models import Permission
+from apps.pm.models import Permission
 from fastapi import HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session

@@ -20,7 +20,6 @@ def create_access_token(
         str: Access token.
     """
     to_encode = data.copy()
-    print(to_encode)
     # Если expires_delta не передан, используем значение из SETTINGS
     if expires_delta is None:
         expires_delta = timedelta(minutes=SETTINGS.jwt_expire_minutes)

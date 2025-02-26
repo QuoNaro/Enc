@@ -57,6 +57,7 @@ class DatabaseSettings(EncSettings):
 class AppSettings(EncSettings):
     secret_key: str
     jwt_expire_minutes: int
+    vault_folder_path: str = '/opt/Enc/vault'
     
     class Config:
         env_prefix = "APP_"

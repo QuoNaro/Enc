@@ -3,9 +3,11 @@ from typing import Optional
 from fastapi import Depends, HTTPException, status
 from jose import JWTError, jwt
 from sqlalchemy.orm import Session
-from auth.schemas import TokenData, UserCreate
+from apps.auth.schemas import TokenData, UserCreate
 from db import get_db
-from auth.models import User
+from apps.auth.models import User
+from apps.pm.models import Vault
+from lib.controller import init_new_user
 from settings import ALGORITHM, OAUTH2_SCHEME, AppSettings
 from .password import get_password_hash, verify_password
 
@@ -95,8 +97,15 @@ def register_user(user_data: UserCreate, db: Session) -> Optional[None | User]:
 
     # Хэшируем пароль и создаем нового пользователя
     hashed_password = get_password_hash(user_data.password)
+    
+    # Создание нового пользователя
     new_user = User(username=user_data.username, hashed_password=hashed_password)
-    db.add(new_user)
+    
+    # Инициализация новоого пользователя в файловой системе
+    init_new_user(db_user = new_user, password=user_data.password)
+    
+    
+    db.add
     db.commit()
     db.refresh(new_user)
 
