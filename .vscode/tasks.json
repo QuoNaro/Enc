@@ -2,15 +2,29 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Запустить сервера разработки",
+      "label": "Запустить FastAPI",
       "type": "shell",
-      "command": "tmux kill-server & bash ./start-dev.sh",
+      "command": "${workspaceFolder}/.venv/bin/uvicorn main:app --reload --host 0.0.0.0 ",
       "presentation": {
         "reveal": "always",
         "panel": "dedicated"
       },
       "options": {
-        "cwd": "${workspaceFolder}"
+        "cwd": "${workspaceFolder}/backend/"
+      },
+      "problemMatcher": []
+    },
+
+    {
+      "label": "Запустить Vue",
+      "type": "shell",
+      "command": "npm run serve",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "options": {
+        "cwd": "${workspaceFolder}/frontend"
       },
       "problemMatcher": []
     },

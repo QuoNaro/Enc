@@ -7,7 +7,6 @@ from apps.auth.schemas import TokenData, UserCreate
 from db import get_db
 from apps.auth.models import User
 
-from lib.enc import init_new_user, init_default_group
 from settings import ALGORITHM, OAUTH2_SCHEME, AppSettings
 from .password import get_password_hash, verify_password
 
@@ -102,10 +101,7 @@ def register_user(user_data: UserCreate, db: Session) -> Optional[None | User]:
     new_user = User(username=user_data.username, hashed_password=hashed_password)
     
 
-    
-    
-    db.add
+    db.add(new_user)
     db.commit()
-    db.refresh(new_user)
 
     return new_user

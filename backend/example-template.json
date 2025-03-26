@@ -1,0 +1,50 @@
+{
+    "templateName": "UserPreferences",
+    "description": "Шаблон для настройки пользовательских предпочтений",
+    "fields": [
+      {
+        "id": "username",
+        "label": "Имя пользователя",
+        "type": "text",
+        "placeholder": "Введите имя пользователя",
+        "required": true,
+        "minLength": 3,
+        "maxLength": 20,
+        "validation": {
+          "regex": "^[a-zA-Z0-9_]+$",
+          "message": "Имя пользователя может содержать только буквы, цифры и подчеркивания."
+        }
+      },
+      {
+        "id": "notificationsEnabled",
+        "label": "Включить уведомления",
+        "type": "checkbox",
+        "defaultValue": false,
+        "required": false
+      },
+      {
+        "id": "volumeLevel",
+        "label": "Уровень громкости",
+        "type": "slider",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "defaultValue": 50,
+        "required": false
+      }
+    ],
+    "groups": [
+      {
+        "id": "personalInfo",
+        "title": "Личная информация",
+        "description": "Пожалуйста, введите свои личные данные.",
+        "fieldIds": ["username"]
+      },
+      {
+        "id": "preferences",
+        "title": "Настройки",
+        "description": "Настройте свои предпочтения.",
+        "fieldIds": ["notificationsEnabled", "volumeLevel"]
+      }
+    ]
+  }
