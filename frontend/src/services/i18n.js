@@ -1,13 +1,9 @@
-import Vue from 'vue';
-import VueI18n from 'vue-i18n';
+// i18n.js
+import { createI18n } from 'vue-i18n';
 
-// Импортируйте ваши файлы локалей
+// Импортируем файлы локалей
 import en from '../locales/en.json';
 import ru from '../locales/ru.json';
-
-
-// Установите плагин VueI18n
-Vue.use(VueI18n);
 
 // Определение поддерживаемых локалей
 const supportedLocales = ['en', 'ru'];
@@ -20,7 +16,8 @@ const localeCode = userLocale.split('-')[0]; // Извлекаем только 
 const defaultLocale = supportedLocales.includes(localeCode) ? localeCode : 'en';
 
 // Создаем экземпляр i18n
-const i18n = new VueI18n({
+const i18n = createI18n({
+  legacy: false, // Отключаем режим совместимости с Vue 2
   locale: defaultLocale, // Локаль пользователя или локаль по умолчанию
   fallbackLocale: 'en', // Локаль, если перевод не найден
   messages: {

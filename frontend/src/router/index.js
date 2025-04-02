@@ -1,60 +1,51 @@
-import Vue from 'vue';
-import Router from 'vue-router';
-import nt from '@/services/notificationService'
-import i18n from '@/services/i18n';
+import { createRouter, createWebHistory } from "vue-router";
+import nt from "@/services/notificationService";
+import i18n from "@/services/i18n";
 
 // Components
-import NotFound from '@/components/ErrorModule/NotFound.vue';
-import UserAuth from '@/components/AuthModule/UserAuth.vue';
-import MainPage from '@/components/MainPage.vue';
-import NewTemplate from '@/components/TemplatesModule/TemplatesMakerForm.vue'
+import NotFound from "@/components/ErrorModule/NotFound.vue";
+import UserAuth from "@/components/AuthModule/UserAuth.vue";
+import MainPage from "@/components/MainPage.vue";
+import NewTemplate from "@/components/TemplatesModule/TemplateManager.vue";
 
-
-
-
-Vue.use(Router);
-
+// Определение маршрутов
 const routes = [
   {
-    path: '/auth',
-    name: 'UserAuth',
+    path: "/auth",
+    name: "UserAuth",
     component: UserAuth,
-    children: [
-      { path: '#zsignin' },
-      { path: '#signup' }
-    ]
+    children: [{ path: "#zsignin" }, { path: "#signup" }],
   },
   {
-    path: '/',
-    name: 'MainPage',
+    path: "/",
+    name: "MainPage",
     component: MainPage,
   },
   {
-    path: '/new-template',
-    name: 'NewTemplate',
+    path: "/new-template",
+    name: "NewTemplate",
     component: NewTemplate,
   },
-
-
   {
-    path: '*',
-    name: 'NotFound',
-    component: NotFound // Компонент для 404 страницы
-  }
+    path: "/:pathMatch(.*)*", // Новый синтаксис для обработки несуществующих маршрутов
+    name: "NotFound",
+    component: NotFound, // Компонент для 404 страницы
+  },
 ];
 
-const router = new Router({
-  mode: 'history',
-  routes
+// Создание экземпляра роутера
+const router = createRouter({
+  history: createWebHistory(), // Используем HTML5 History Mode
+  routes,
 });
 
 // Функция для проверки аутентификации
 function isAuthenticated() {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem("token");
   if (!token) return false;
 
   try {
-    const payload = JSON.parse(atob(token.split('.')[1]));
+    const payload = JSON.parse(atob(token.split(".")[1]));
     const expirationTime = payload.exp; // Время истечения токена (в секундах)
 
     if (expirationTime && Date.now() / 1000 > expirationTime) {
@@ -67,23 +58,24 @@ function isAuthenticated() {
   }
 }
 
-// Глобальный гвард для защиты маршрутов
+// Глобальный навигационный гвард
 router.beforeEach((to, from, next) => {
   // Проверяем, авторизован ли пользователь
-  if (to.path !== '/auth' && !isAuthenticated()) {
+  if (to.path !== "/auth" && !isAuthenticated()) {
     // Если токен истёк, показываем уведомление
-    if (localStorage.getItem('token')) {
-      nt.showNotification('info', i18n.t('auth.error.auth.TOKEN-001'), 15000); // Показываем уведомление
+    if (localStorage.getItem("token")) {
+      const message = i18n.global.t("auth.error.auth.TOKEN-001"); // Используем i18n.global.t
+      nt.showNotification("info", message, 15000); // Показываем уведомление
     }
-    next('/auth'); // Перенаправляем на страницу аутентификации
-    localStorage.removeItem('token')
+    next("/auth"); // Перенаправляем на страницу аутентификации
+    localStorage.removeItem("token");
     return;
   }
 
   // Обновляем заголовок страницы
-  document.title = to.meta.title || 'Encryption';
+  document.title = to.meta.title || "Encryption";
 
   next(); // Разрешаем переход
 });
 
-export default router;
+export default router;  

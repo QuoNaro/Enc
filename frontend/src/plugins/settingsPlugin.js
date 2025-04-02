@@ -2,7 +2,7 @@
 import apiClient from '@/services/api';
 
 export default {
-  install(Vue) {
+  install(app) {
     // Функция для загрузки настроек
     async function loadSettings() {
       let appSettings = null;
@@ -14,7 +14,7 @@ export default {
           try {
             appSettings = JSON.parse(storedSettings);
           } catch (e) {
-            console.error('Settings not imported:', e);
+            console.error('Ошибка при импорте настроек:', e);
           }
         }
       }
@@ -34,8 +34,8 @@ export default {
         }
       }
 
-      // Добавляем настройки в Vue.prototype
-      Vue.prototype.$appSettings = appSettings;
+      // Добавляем настройки в глобальные свойства Vue
+      app.config.globalProperties.$appSettings = appSettings;
     }
 
     // Вызываем функцию загрузки настроек
