@@ -18,7 +18,7 @@
     {
       "label": "Запустить Vue",
       "type": "shell",
-      "command": "npm run serve",
+      "command": "npm run dev",
       "presentation": {
         "reveal": "always",
         "panel": "dedicated"
@@ -43,5 +43,5 @@
       "isBackground": true, // Позволяет отслеживать процесс в фоне
       "group": "build" // Группировка задачи (необязательно)
     }
-  ],
+  ]
 }

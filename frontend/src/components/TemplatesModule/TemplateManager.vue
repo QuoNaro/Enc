@@ -3,6 +3,8 @@
     <!-- Боковая панель компонентов -->
     <div class="sidebar">
       <h3>Компоненты</h3>
+      
+
       <draggable 
         v-model="componentsList"
         :group="{ name: 'fields', pull: 'clone', put: false }"
@@ -10,16 +12,14 @@
         item-key="type"
         class="field-list"
       >
-      <template #item="{ element }">
-        <div :key="element.type" class="field-item-draggable">
-          <span class="icon">{{ element.icon }}</span>
-          {{ element.label }}
-        </div>
-      </template>
-
-
-        
+        <template #item="{ element }">
+          <div :key="element.type" class="field-item-draggable">
+            <span class="icon">{{ element.icon }}</span>
+            {{ element.label }}
+          </div>
+        </template>
       </draggable>
+
     </div>
 
     
