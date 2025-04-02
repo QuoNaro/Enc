@@ -23,3 +23,8 @@ class UserResponse(BaseModel):
 
 class PasswordRequest(BaseModel):
     password: str
+    
+    
+class User(BaseModel):
+    user: Optional[UserResponse]  # Ваша модель пользователя
+    is_authenticated: bool

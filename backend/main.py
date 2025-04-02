@@ -1,57 +1,47 @@
+# main.py
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from apps.auth.routes import router as auth_routes
-from apps.pm.routes import router as pm_routes
 from contextlib import asynccontextmanager
-from db import Base,engine
+from db import Base, engine
+from typing import Optional
 
+# Singleton-переменная для хранения экземпляра приложения
+_app: Optional[FastAPI] = None
 
-class FolderError(Exception):
-    """
-    Custom exception class for folder-related errors.
-    """
-    pass
+def create_app() -> FastAPI:
+    global _app
+    if _app is not None:
+        return _app
 
+    # Создаем новый экземпляр приложения
+    _app = FastAPI()
 
+    # Middleware
+    _app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    Base.metadata.create_all(engine)
-    
-    # Таблицы созданы
-    yield
-    
-    
-app = FastAPI(lifespan=lifespan)
+    # Lifespan
+    @_app.on_event("startup")
+    async def startup():
+        Base.metadata.create_all(engine)
 
+    # Регистрация роутов
+    from apps.auth.routes import router as auth_routes
+    from apps.pm.routes import router as pm_routes
 
-# app.add_middleware(
-#     CORSMiddleware,
-#     allow_origins=["http://127.0.0.1:8080", "http://localhost:8080"],
-#     allow_credentials=True,
-#     allow_methods=["GET", "POST", "PUT", "DELETE"],
-#     allow_headers=["Content-Type", "Authorization"],
-# )
+    _app.include_router(auth_routes)
+    _app.include_router(pm_routes)
 
+    return _app
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # Allow all origins
-    allow_credentials=True,
-    allow_methods=["*"],  # Allow all methods
-    allow_headers=["*"],  # Allow all headers
-)
+# Создаем основной экземпляр приложения
+app = create_app()
 
-
-# Подключение маршрутов
-app.include_router(auth_routes)
-app.include_router(pm_routes)
-
-
-
-
-
-
-
-
-        
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)

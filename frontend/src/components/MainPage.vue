@@ -1,6 +1,12 @@
 <template>
 <div class="main-container">
     <div class="vault-container">
+        
+        <div class="buttonsс">
+
+        </div>
+        
+
         <div class="vault chapter">
             <h3 class="title">{{ $t('main.my-safe') }}
                 <img class="icon" src="@/assets/icons/safe-icon.svg" alt="">

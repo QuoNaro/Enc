@@ -6,9 +6,8 @@ from sqlalchemy.orm import Session
 from apps.auth.schemas import TokenData, UserCreate
 from db import get_db
 from apps.auth.models import User
-
 from settings import ALGORITHM, OAUTH2_SCHEME, AppSettings
-from .password import get_password_hash, verify_password
+from .password.hash import get_password_hash, verify_password
 
 SETTINGS = AppSettings()
 SECRET_KEY = SETTINGS.secret_key

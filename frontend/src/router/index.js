@@ -7,6 +7,7 @@ import i18n from '@/services/i18n';
 import NotFound from '@/components/ErrorModule/NotFound.vue';
 import UserAuth from '@/components/AuthModule/UserAuth.vue';
 import MainPage from '@/components/MainPage.vue';
+import NewTemplate from '@/components/TemplatesModule/TemplatesMakerForm.vue'
 
 
 
@@ -27,6 +28,11 @@ const routes = [
     path: '/',
     name: 'MainPage',
     component: MainPage,
+  },
+  {
+    path: '/new-template',
+    name: 'NewTemplate',
+    component: NewTemplate,
   },
 
 
