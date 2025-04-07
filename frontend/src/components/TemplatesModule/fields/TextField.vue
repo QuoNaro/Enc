@@ -57,7 +57,19 @@ import { defineComponent, ref, watch, computed } from 'vue';
 
 export default defineComponent({
   name: 'TextField',
+  methods: {
+    updateRequired(e) {
+      this.localField.required = e.target.checked;
+      this.emitUpdate();
+    },
+  
+    emitUpdate() {
+        this.$emit('update', { ...this.localField });
+    },
 
+
+    
+  },
   props: {
     field: {
       type: Object,

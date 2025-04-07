@@ -5,7 +5,7 @@ import i18n from "@/services/i18n";
 // Components
 import NotFound from "@/components/ErrorModule/NotFound.vue";
 import UserAuth from "@/components/AuthModule/UserAuth.vue";
-import MainPage from "@/components/MainPage.vue";
+import MainPage from "@/components/MainPageModule/MainPage.vue";
 import NewTemplate from "@/components/TemplatesModule/TemplateManager.vue";
 
 // Определение маршрутов
@@ -14,7 +14,7 @@ const routes = [
     path: "/auth",
     name: "UserAuth",
     component: UserAuth,
-    children: [{ path: "#zsignin" }, { path: "#signup" }],
+    children: [{ path: "#signin" }, { path: "#signup" }],
   },
   {
     path: "/",

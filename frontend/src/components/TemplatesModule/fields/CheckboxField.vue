@@ -90,6 +90,10 @@ export default {
       });
       this.emitUpdate();
     },
+    updateRequired(e) {
+      this.localField.required = e.target.checked;
+      this.emitUpdate();
+    },
     removeOption(index) {
       this.localField.options.splice(index, 1);
       this.emitUpdate();
@@ -105,7 +109,8 @@ export default {
     emitUpdate() {
       this.$emit('update', {
         label: this.localField.label,
-        options: [...this.localField.options]
+        options: [...this.localField.options],
+        required : this.localField.required,
       });
     }
   }

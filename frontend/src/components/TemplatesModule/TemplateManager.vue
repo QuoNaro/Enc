@@ -265,7 +265,7 @@ export default {
               return {
                 id: field.id,
                 type: field.type,
-                label: field.label,
+                label: field.value,
                 ...this.getDefaultFieldProps(field.type),
                 ...field
               };
