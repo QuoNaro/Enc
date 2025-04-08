@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Мобильная панель СДС СТРОЙ</title>
+  <style>
+    :root {
+      --primary: #1a2a49;
+      --secondary: #05193a;
+      --accent: #6ab04c;
+      --text: #2d3748;
+      --bg: #f5f7fa;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(45deg, #c3cfe2 0%, #f5f7fa 100%);
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 375px;
+      border-radius: 32px;
+      overflow: hidden;
+      box-shadow: 0 12px 48px rgba(31,38,135,0.3);
+      display: flex;
+      flex-direction: column;
+      background: white;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 280px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      padding: 32px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .sidebar::before {
+      content: '';
+      position: absolute;
+      top: -5%;
+      left: -5%;
+      width: 110%;
+      height: 110%;
+      background: rgba(255,255,255,0.1);
+      filter: blur(40px);
+      border-radius: 50%;
+    }
+
+    .logo {
+      font-size: 36px;
+      color: white;
+      text-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      margin-bottom: 40px;
+      font-weight: 900;
+      position: relative;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+      100% { transform: scale(1); }
+    }
+
+    .menu {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      padding: 20px 32px;
+      margin-bottom: 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.3s;
+      background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.1) 100%);
+    }
+
+    .menu-item:hover {
+      transform: scale(1.02);
+      box-shadow: 0 4px 16px rgba(106,176,76,0.3);
+    }
+
+    .menu-item i {
+      font-size: 26px;
+      margin-right: 20px;
+      color: var(--accent);
+      transition: color 0.3s;
+    }
+
+    .menu-item:hover i {
+      transform: translateX(4px);
+    }
+
+    .menu-item span {
+      font-size: 18px;
+      color: white;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    /* Content */
+    .content {
+      padding: 32px;
+      flex: 1;
+      background: var(--bg);
+      position: relative;
+      z-index: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .hero {
+      background: linear-gradient(45deg, rgba(255,255,255,0.2), rgba(255,255,255,0.1));
+      padding: 24px;
+      border-radius: 24px;
+      box-shadow: 0 8px 32px rgba(31,38,135,0.15);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .hero i {
+      font-size: 48px;
+      color: var(--accent);
+    }
+
+    .feature-box {
+      background: white;
+      padding: 24px;
+      border-radius: 24px;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.1);
+      margin-bottom: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .feature-box h2 {
+      color: var(--text);
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    .feature-box p {
+      color: #5e6c84;
+      line-height: 1.6;
+    }
+
+    .feature-box i {
+      font-size: 32px;
+      color: var(--accent);
+      margin-bottom: 16px;
+    }
+
+    /* Responsive */
+    @media (max-width: 425px) {
+      .app-container {
+        max-width: 100%;
+      }
+      .sidebar {
+        width: 100%;
+      }
+      .logo {
+        font-size: 32px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="logo">СДС СТРОЙ</div>
+      <ul class="menu">
+        <li class="menu-item">
+          <i class="fas fa-lock"></i>
+          <span>Хранилище</span>
+        </li>
+        <li class="menu-item">
+          <i class="fas fa-file-alt"></i>
+          <span>Шаблоны</span>
+        </li>
+        <li class="menu-item">
+          <i class="fas fa-cog"></i>
+          <span>Параметры</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+      <div class="hero">
+        <i class="fas fa-building"></i>
+        <div>
+          <h2>Добро пожаловать!</h2>
+          <p>Управление вашим проектом стало проще</p>
+        </div>
+      </div>
+
+      <div class="feature-box">
+        <i class="fas fa-database"></i>
+        <h2>Хранилище</h2>
+        <p>Управление файлами, документами и архивами</p>
+      </div>
+
+      <div class="feature-box">
+        <i class="fas fa-tasks"></i>
+        <h2>Шаблоны</h2>
+        <p>Библиотека готовых решений для быстрой работы</p>
+      </div>
+
+      <div class="feature-box">
+        <i class="fas fa-wrench"></i>
+        <h2>Настройки</h2>
+        <p>Персонализация интерфейса и аккаунта</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Icons -->
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</body>
+</html>

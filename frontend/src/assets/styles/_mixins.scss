@@ -1,0 +1,52 @@
+@mixin unselectable {
+    /* Отключает возможность перетаскивания изображения */
+    user-drag: none;
+    -webkit-user-drag: none;
+
+    /* Отключает выделение текста или изображения */
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+
+    /* Отключает контекстное меню (например, при правом клике) */
+    pointer-events: none;
+
+    /* Дополнительно: предотвращает перетаскивание изображения как файла */
+    cursor: default;
+    
+    }
+
+// Определяем переменные для каждого уровня
+$hard-radius: 5px;
+$soft-radius: 15px;
+$light-radius: 25px;
+
+/// Миксин с использованием переменных
+@mixin border-radius($strength: hard) {
+  @if $strength == hard {
+    border-radius: $hard-radius;
+  } @else if $strength == soft {
+    border-radius: $soft-radius;
+  } @else if $strength == light {
+    border-radius: $light-radius;
+  } @else {
+    @warn "Неверное значение силы скругления: '#{$strength}'. Используйте 'hard', 'soft' или 'light'.";
+  }
+}
+
+
+
+/// Миксин с использованием переменных
+@mixin padding($padding-width) {
+  padding: #{$padding-width}px;
+  box-sizing: border-box;
+}
+
+
+@mixin none {
+  outline: none;
+  border: none;
+}
+
+  

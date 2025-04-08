@@ -24,8 +24,8 @@
   </template>
 
 <script>
-import nt from '@/services/notificationService';
-import apiClient from '@/services/api';
+import nt from '@/utils/notificationService';
+import apiClient from '@/utils/api';
 
 export default {
     name: 'SignInForm',

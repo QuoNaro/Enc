@@ -1,12 +1,14 @@
 import { createRouter, createWebHistory } from "vue-router";
-import nt from "@/services/notificationService";
-import i18n from "@/services/i18n";
+import nt from "@/utils/notificationService";
+import i18n from "@/utils/i18n";
 
 // Components
 import NotFound from "@/components/ErrorModule/NotFound.vue";
 import UserAuth from "@/components/AuthModule/UserAuth.vue";
 import MainPage from "@/components/MainPageModule/MainPage.vue";
-import NewTemplate from "@/components/TemplatesModule/TemplateManager.vue";
+import NewTemplate from "@/components/TemplatesModule/Manager/TemplateManager.vue";
+import T from "@/components/TemplatesModule/Renderer/Test.vue";
+
 
 // Определение маршрутов
 const routes = [
@@ -25,6 +27,11 @@ const routes = [
     path: "/new-template",
     name: "NewTemplate",
     component: NewTemplate,
+  },
+  {
+    path: "/test",
+    name: "Test",
+    component: T,
   },
   {
     path: "/:pathMatch(.*)*", // Новый синтаксис для обработки несуществующих маршрутов

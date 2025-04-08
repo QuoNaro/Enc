@@ -16,6 +16,7 @@ body {
     align-items: center;
 }
 
+
 #app {
   background-color: var(--background-color);
   height: 100vh; /* Растягиваем #app на всю высоту viewport */

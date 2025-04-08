@@ -35,9 +35,9 @@
 </template>
   
   <script>
-  import apiClient from '@/services/api';
-  import vp from '@/services/validatePassword';
-  import debounce from '@/services/debounce';
+  import apiClient from '@/utils/api';
+  import vp from '@/utils/validatePassword';
+  import debounce from '@/utils/debounce';
 
   export default {
     name: 'SignUpForm',

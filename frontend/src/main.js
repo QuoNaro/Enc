@@ -1,22 +1,21 @@
 // main.js
 import { createApp } from 'vue';
-import { createPinia } from 'pinia';
 import App from './App.vue';
 
 import router from './router';
-import i18n from '@/services/i18n';
+import i18n from '@/utils/i18n';
 
 // Стили
 import './assets/styles/global.css';
 import './assets/styles/fonts.css';
 
 // Директивы
-import onlyEng from '@/directives/login';
-import password from '@/directives/password';
+import onlyEng from '@/utils/directives/login';
+import password from '@/utils/directives/password';
 
 // Плагины
-import formatPlugin from '@/plugins/format';
-import settingsPlugin from '@/plugins/settingsPlugin';
+import formatPlugin from '@/utils/plugins/format';
+import settingsPlugin from '@/utils/plugins/settingsPlugin';
 
 // Анимации
 import gsap from 'gsap';

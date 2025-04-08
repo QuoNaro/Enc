@@ -3,9 +3,9 @@
     <div class="main-container">
 
       <div class="img-container">
-          <img src="@/assets/wave1.svg" alt="Wave 1" class="wave wave-1">
-          <img src="@/assets/wave2.svg" alt="Wave 2" class="wave wave-2">
-          <img src="@/assets/wave3.svg" alt="Wave 3" class="wave wave-3">
+          <img src="@/assets/images/waves/wave1.svg" alt="Wave 1" class="wave wave-1">
+          <img src="@/assets/images/waves/wave2.svg" alt="Wave 2" class="wave wave-2">
+          <img src="@/assets/images/waves/wave3.svg" alt="Wave 3" class="wave wave-3">
       </div>
         
 
@@ -80,22 +80,6 @@
 $border-color: var(--border-color);
 $shadow: var(--shadow);
 
-// Миксин для отключения выделения текста
-@mixin no-select {
-  user-select: none; // Стандартное свойство
-  -webkit-user-select: none; // Для старых версий Safari
-  -moz-user-select: none; // Для Firefox
-  -ms-user-select: none; // Для Internet Explorer
-}
-
-// Миксин для центрирования элементов
-@mixin centered {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
 // Анимация волн
 @keyframes wavy {
   0%, 100% {
@@ -116,7 +100,7 @@ $shadow: var(--shadow);
   box-sizing: border-box;
   background-color: white;
   height: 85%;
-  border-radius: 2em;
+  @include border-radius(light);
   box-shadow: $shadow 0px 0px 30px;
   gap: 20px;
 
@@ -139,7 +123,10 @@ $shadow: var(--shadow);
     }
 
     form {
-      @include centered; // Центрирование формы
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
       width: 100%;
     }
 
@@ -153,7 +140,7 @@ $shadow: var(--shadow);
     width: 100%;
     border: 1px solid $border-color;
     box-shadow: $shadow 0 0 20px;
-    border-radius: 20px;
+    @include border-radius(light);
     overflow: hidden;
 
     .wave {

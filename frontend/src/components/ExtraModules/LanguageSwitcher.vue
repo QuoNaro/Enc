@@ -70,7 +70,7 @@ export default {
   background-color: #42b983;
   color: white;
   border: none;
-  border-radius: 50%;
+  @include border-radius();
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   transition: transform 0.2s ease, background-color 0.2s ease;
@@ -91,7 +91,7 @@ export default {
   right: 0;
   background-color: white;
   border: 1px solid #ddd;
-  border-radius: 8px;
+  @include border-radius();
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   list-style: none;
   padding: 0;

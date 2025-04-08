@@ -1,3 +1,9 @@
+@import url('../fonts/Inter/inter.css');
+@import url('../fonts/Montserrat/Montserrat.css');
+@import url('../fonts/Roboto/roboto.css');
+
+
+
 @font-face {
     font-family: 'Arimo';
     src: 
@@ -18,10 +24,5 @@
       font-style: normal;
   }
 
-  @font-face {
-    font-family: 'Akt';
-    src:
-        url('../fonts/Akt-Light.woff2') format('woff2');
-      font-weight: 500;
-      font-style: normal;
-  }
+
+

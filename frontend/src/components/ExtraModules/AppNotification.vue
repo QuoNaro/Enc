@@ -49,7 +49,7 @@ $color-info: #2196f3;  // Синий цвет для информационны�
   font-family: 'Arimo';
   transform: translateX(-50%) translateY(-20px);
   padding: 10px 20px;
-  border-radius: 5px;
+  @include border-radius();
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   z-index: 1000;
   color: white;

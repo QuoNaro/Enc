@@ -1,7 +1,7 @@
 {
     "buttons" : {
         "settings" : "Параметры",
-        "password" : "Пароли",
+        "vault" : "Хранилище",
         "templates" : "Шаблоны"
     },
     "auth" : {

@@ -2,7 +2,7 @@
 import Logo from '@/components/Logo.vue';
 import { assets } from '@/config';
 import { ref, onMounted, onBeforeUnmount, watch, markRaw } from 'vue';
-import i18n from '@/services/i18n';
+import i18n from '@/utils/i18n';
 
 
 // Реактивные данные
@@ -11,24 +11,55 @@ const currentComponent = ref(null);
 const componentsMap = ref({});
 const buttons = ref([]);
 
+
 // Загрузка компонентов
-const importComponents = async () => {
-  const modules = import.meta.glob('@/components/MainPageModule/Buttons/*.vue');
+const importComponents = async (order = {}) => {
+  // Импортируем модули из основной папки и дочерних папок
+  const modules = import.meta.glob([
+    '@/components/MainPageModule/Buttons/*.vue', // Основная папка
+    '@/components/MainPageModule/Buttons/*/*.vue' // Дочерние папки
+  ]);
+
+  // Временный массив для хранения загруженных компонентов
+  const loadedComponents = [];
+
   for (const path in modules) {
-    const module = await modules[path]();
-    const componentName = path.split('/').pop().replace('.vue', '');
+    // Разбиваем путь на части для анализа
+    const pathParts = path.split('/');
+    const fileName = pathParts[pathParts.length - 1].replace('.vue', ''); // Название файла без расширения
 
-    // Добавляем компонент в карту
-    componentsMap.value[componentName.replace(/([A-Z])/g, ' $1').trim().toLowerCase()] = markRaw(module.default);
+    // Проверяем, что файл начинается с заглавной буквы
+    if (/^[A-Z]/.test(fileName)) {
+      const module = await modules[path]();
 
-    const translationKey = componentName.replace(/([A-Z])/g, '$1').toLowerCase();
+      // Имя компонента: всегда используем только название файла (fileName)
+      const componentName = fileName;
 
-    buttons.value.push({
-      name: componentName,
-      label: i18n.global.t(`buttons.${translationKey}`),
-      link: componentName.replace(/([A-Z])/g, ' $1').trim().toLowerCase()
-    });
+      // Генерируем ключ для перевода
+      const translationKey = componentName.replace(/([A-Z])/g, '$1').toLowerCase();
+
+      // Находим порядковый номер из словаря order
+      const orderIndex = Object.values(order).indexOf(componentName);
+      const componentOrder = orderIndex !== -1 ? Object.keys(order)[orderIndex] : Infinity;
+
+      // Сохраняем информацию о кнопке во временном массиве
+      loadedComponents.push({
+        name: componentName,
+        label: i18n.global.t(`buttons.${translationKey}`),
+        link: componentName.replace(/([A-Z])/g, ' $1').trim().toLowerCase(),
+        order: Number(componentOrder) // Преобразуем ключ в число
+      });
+
+      // Добавляем компонент в карту
+      componentsMap.value[componentName.replace(/([A-Z])/g, ' $1').trim().toLowerCase()] = markRaw(module.default);
+    }
   }
+
+  // Сортируем компоненты по указанному порядку
+  loadedComponents.sort((a, b) => a.order - b.order);
+
+  // Добавляем отсортированные компоненты в массив buttons
+  buttons.value = loadedComponents.map(({ name, label, link }) => ({ name, label, link }));
 };
 
 // Выбор компонента по хэшу
@@ -50,7 +81,7 @@ const onHashChange = () => {
 
 // Жизненный цикл
 onMounted(async () => {
-  await importComponents();
+  await importComponents({0:'Vault',1: "Templates"});
   selectComponent();
   window.addEventListener('hashchange', onHashChange);
 });
@@ -89,7 +120,7 @@ $secondary: var(--secondary-color);
 .main-container {
   background-color: white;
   overflow: hidden;
-  border-radius: 20px;
+  @include border-radius(soft);
   display: flex;
   width: calc(100% - 50px); // Корректируем ширину с учетом margin
   height: calc(100% - 50px); // Корректируем высоту с учетом margin
@@ -116,7 +147,7 @@ $secondary: var(--secondary-color);
     background-color: $secondary;
 
     .link {
-      @include unselectable();
+      @include unselectable;
       display: flex;
       font-family: 'Arimo';
       font-weight: 900;
@@ -132,7 +163,7 @@ $secondary: var(--secondary-color);
       overflow: hidden;
 
       transform: translateX(0);
-      border-radius: 10px;
+      @include border-radius();
       justify-content: center;
       align-items: center;
       transition: .8s ease-in-out;
@@ -162,6 +193,9 @@ $secondary: var(--secondary-color);
 
     }
 
+    .link:hover {
+      background-color: #fff;
+    }
     .link:not(.active) {
         cursor: pointer;
       }

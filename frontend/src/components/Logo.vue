@@ -23,7 +23,9 @@
 
   </script>
   
-  <style scoped>
+  <style lang="scss" scoped>
+  
+
   .logo-container {
     display: inline-block;
     cursor: pointer;
@@ -34,6 +36,7 @@
   }
   
   .logo-image {
+    @include unselectable;
     max-width: 100%;
     height: auto;
   }
