@@ -26,7 +26,9 @@
         this.selectedValues = newVal
       }
     },
+    inject: ['mode'],
     methods: {
+      
       handleCheckboxChange(event) {
         const value = event.target.value
         const index = this.selectedValues.indexOf(value)

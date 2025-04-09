@@ -14,18 +14,22 @@
   
   <script>
   export default {
+    inheritAttrs: false,
+    inject: ['mode'],
     props: ['id', 'multiple', 'required', 'options', 'modelValue'],
+
     emits: ['update:modelValue'],
-    data() {
-      return {
-        selectedValue: this.multiple ? [] : ''
-      }
+    
+    computed: {
+  selectedValue: {
+    get() {
+      return this.modelValue;
     },
-    watch: {
-      modelValue(newVal) {
-        this.selectedValue = newVal
-      }
-    },
+    set(value) {
+      this.$emit('update:modelValue', value);
+    }
+  }
+},
     methods: {
       handleChange() {
         this.$emit('update:modelValue', this.selectedValue)

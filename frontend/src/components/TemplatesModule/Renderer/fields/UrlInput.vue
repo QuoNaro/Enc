@@ -10,6 +10,7 @@
   
   <script>
   export default {
+    inject: ['mode'],
     props: ['id', 'placeholder', 'required', 'modelValue'],
     emits: ['update:modelValue'],
     computed: {

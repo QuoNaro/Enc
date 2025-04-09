@@ -16,6 +16,7 @@
   
   <script>
   export default {
+    inject: ['mode'],
     props: ['id', 'options', 'required', 'modelValue'],
     emits: ['update:modelValue']
   }

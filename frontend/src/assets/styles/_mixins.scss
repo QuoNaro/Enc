@@ -49,4 +49,32 @@ $light-radius: 25px;
   border: none;
 }
 
-  
+@mixin custom-scrollbar($thumb-color: #888, $track-color: transparent, $scrollbar-width: 4px) {
+  width: 100%;
+  height: 100%;
+  border: none;
+  overflow-y: auto; // Добавляем вертикальную полосу прокрутки
+  resize: none;
+
+  &::-webkit-scrollbar {
+    width: $scrollbar-width; // Ширина полосы прокрутки
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $track-color; // Цвет фона дорожки
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $thumb-color; // Цвет "бегунка"
+    border-radius: 4px; // Закругление углов
+  }
+
+  &::-webkit-scrollbar-button {
+    display: none; // Убираем стрелки
+  }
+}
+
+// Пример использования миксина
+textarea {
+  @include custom-scrollbar(#555, rgba(0, 0, 0, 0.1), 6px);
+}

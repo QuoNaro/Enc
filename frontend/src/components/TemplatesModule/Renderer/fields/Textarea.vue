@@ -16,6 +16,7 @@
 
 <script>
 export default {
+  inject: ['mode'],
   props: {
     bgColor: {
       type: String,
@@ -24,23 +25,25 @@ export default {
     },
     placeholder : String,
     id: String,
-    rows: Object,
-    maxLength: Int32Array,
+    rows: Number,
+    maxLength: Number,
     required: Boolean,
-    modelValue: Object,
+    modelValue: String,
     label: String,
   },
   emits: ['update:modelValue'],
   computed: {
     inputValue: {
       get() { return this.modelValue },
-      set(value) { this.$emit('update:modelValue', value) }
+      set(value) { this.$emit('update:modelValue', value)}
     }
   }
 }
 </script>
 
 <style lang="scss">
+
+
 
 $padding: 15;
 $margin: 10px;
@@ -68,15 +71,22 @@ $margin: 10px;
     @include border-radius(soft);
     @include padding($padding);
     background-color: white;
+    max-height: 300px;
+    height: 150px;
 
 
     textarea {
       width: 100%;
       height: 100%;
       border: none;
+      mask-image: linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 5%, rgba(0,0,0,1) 95%, rgba(0,0,0,0) 100%);
+
+      overflow-y: auto; /* Добавляем вертикальную полосу прокрутки */
       @include none;
-      resize: none;
+      @include custom-scrollbar(#0898ff)
     }
-  }
+    
+    }
+    
 }
 </style>

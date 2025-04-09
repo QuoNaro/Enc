@@ -14,6 +14,7 @@
   <script>
   export default {
     props: ['id', 'placeholder', 'minLength', 'maxLength', 'required', 'modelValue'],
+    inject: ['mode'],
     emits: ['update:modelValue'],
     computed: {
       inputValue: {
@@ -23,3 +24,17 @@
     }
   }
   </script>
+
+<style scoped lang="scss">
+input {
+  margin: 10px;
+  @include padding(8);
+  border: 3px solid #0898ff;
+  @include border-radius(hard);
+  font-size: 16px;
+  outline: none;
+  
+}
+
+
+</style>

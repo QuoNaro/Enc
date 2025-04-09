@@ -46,7 +46,7 @@
         {
           "id": "field_3",
           "type": "textarea",
-          "label": "О себе",
+          "label": "О себе и моём пенисе",
           "placeholder": "Расскажите немного о себе",
           "required": false,
           "rows": 5,

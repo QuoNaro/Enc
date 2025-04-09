@@ -4,6 +4,7 @@
         "vault" : "Хранилище",
         "templates" : "Шаблоны"
     },
+    "show": "Показать пароль",
     "auth" : {
         "buttons" : {
             "settings" : "Параметры",
