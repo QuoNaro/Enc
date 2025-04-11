@@ -22,7 +22,7 @@ export default {
       // Если настроек нет в localStorage, загружаем с сервера
       if (!appSettings) {
         try {
-          const response = await apiClient.get('/api/get-password-settings');
+          const response = await apiClient.get('/api/v1/get-password-settings');
           appSettings = response.data;
 
           // Сохраняем настройки в localStorage

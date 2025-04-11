@@ -15,7 +15,7 @@
           </div>
         </div>
         
-        <button type="submit">Отправить</button>
+        <button type="submit">Сохранить</button>
       </form>
     </div>
 

@@ -30,7 +30,7 @@ input {
   margin: 10px;
   @include padding(8);
   border: 3px solid #0898ff;
-  @include border-radius(hard);
+  @include border-radius(soft);
   font-size: 16px;
   outline: none;
   

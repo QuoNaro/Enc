@@ -85,7 +85,7 @@ const toggleNoise = async () => {
   position: relative;
   max-height: 40px;
   overflow: hidden;
-  @include border-radius(hard);
+  @include border-radius(soft);
   border: 3px #0898ff solid;
   background-color: #fff;
 

@@ -10,7 +10,7 @@ SECRET_KEY = SETTINGS.secret_key
 def create_access_token(
     data: dict, 
     expires_delta: Optional[timedelta] = None  # Устанавливаем дефолтное значение как None
-) -> str:
+    ) -> str:
     """
     Создает access token с указанными данными.
     Parameters:
@@ -31,3 +31,15 @@ def create_access_token(
     # Кодируем данные в JWT
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
+
+def decode_token(token: str, secret_key: str, algorithm: str):
+    try:
+        payload = jwt.decode(token, secret_key, algorithms=[algorithm])
+        user_id = payload.get("sub")  # Assuming "sub" contains the user ID
+        if user_id:
+            return {"id": user_id}  # Return a dictionary with the required fields
+        raise HTTPException(status_code=401, detail="Invalid token")
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Token has expired")
+    except jwt.InvalidTokenError:
+        raise HTTPException(status_code=401, detail="Invalid token")

@@ -20,11 +20,14 @@ class UserResponse(BaseModel):
     id: int
     username: str
     is_active: bool
+    class Config:
+        from_attributes = True 
+        
 
 class PasswordRequest(BaseModel):
     password: str
     
     
-class User(BaseModel):
-    user: Optional[UserResponse]  # Ваша модель пользователя
+class UserRequest(UserResponse):
     is_authenticated: bool
+    

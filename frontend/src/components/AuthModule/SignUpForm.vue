@@ -56,7 +56,7 @@
           return;
         }
         try {
-          const response = await apiClient.get(`/check_username/?username=${this.username}`);
+          const response = await apiClient.get(`/api/v1/check_username/?username=${this.username}`);
           if (!response.data.available) {
             this.username_error = this.$t('auth.error.auth.USER-001');
           } else {
@@ -80,7 +80,7 @@
       },
       async register() {
         try {
-          let response = await apiClient.post('/register', {
+          let response = await apiClient.post('api/v1/register', {
             username: this.username,
             password: this.password,
           });

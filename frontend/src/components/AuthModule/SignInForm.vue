@@ -41,7 +41,7 @@ export default {
                 const params = new URLSearchParams();
                 params.append('username', this.username);
                 params.append('password', this.password);
-                const response = await apiClient.post('/token', params);
+                const response = await apiClient.post('/api/v1/token', params);
                 if (typeof localStorage !== 'undefined') {
                     localStorage.setItem('token', response.data.access_token);
                     this.$router.push('/');

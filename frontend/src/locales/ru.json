@@ -5,6 +5,8 @@
         "templates" : "Шаблоны"
     },
     "show": "Показать пароль",
+    "empty_var" : "Пустой вариант",
+    "select_placeholder" : "Выберите вариант",
     "auth" : {
         "buttons" : {
             "settings" : "Параметры",

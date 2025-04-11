@@ -9,8 +9,8 @@ from apps.pm.models import Permission
 from fastapi import HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
+from apps.api.v1 import router
 
-router = APIRouter()
 
 @router.post("/register", response_model=Token)
 async def register(user: UserCreate, db: Session = Depends(get_db)):
@@ -56,12 +56,12 @@ async def register_admin(user: UserCreate, db: Session = Depends(get_db)):
     access_token = create_access_token(data={"sub": new_user.username})
     return {"access_token": access_token, "token_type": "bearer"}
 
-@router.get('/api/get-password-settings')
+@router.get('/get-password-settings')
 async def get_settings_for_vue():
     from settings import PasswordSettings
     return PasswordSettings().model_dump()
 
-@router.post('/api/validate-password')
+@router.post('/validate-password')
 async def validate_password(password : PasswordRequest):
     password = Password(password=password.password)
     valid = password.is_valid

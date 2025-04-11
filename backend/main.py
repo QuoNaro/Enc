@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from db import Base, engine
 from typing import Optional
+from middleware import AddUserDataMiddleware
 
 # Singleton-переменная для хранения экземпляра приложения
 _app: Optional[FastAPI] = None
@@ -33,9 +34,16 @@ def create_app() -> FastAPI:
     # Регистрация роутов
     from apps.auth.routes import router as auth_routes
     from apps.pm.routes import router as pm_routes
+    from apps.templates.routes import router as template_routes
+    from apps.api.v1 import router as api_routes
 
     _app.include_router(auth_routes)
     _app.include_router(pm_routes)
+    _app.include_router(template_routes)
+    _app.include_router(api_routes)
+    
+    # Регистрация middleware     
+    _app.add_middleware(AddUserDataMiddleware)
 
     return _app
 

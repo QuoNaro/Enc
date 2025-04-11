@@ -2,31 +2,36 @@
       <div :class="{sidebar : true, hide: isHide}">
         
       </div>
-  
+      
       <div class="content">
         
       </div>
   </template>
 
 
-<script embedded>
-
-import { onUnmounted } from 'vue';
+<script>
+import apiClient from '@/utils/api';
 
 export default {
   data() {
-      return {
-        isHide: true
-      };
-    },
+    return {
+      isHide: true,
+      templates: [] // Добавляем поле для хранения данных шаблонов
+    };
+  },
 
-  mounted() {
+  async beforeMount( ) {
+    const response = await apiClient.get('/api/v1/get-templates');
+      console.log(response)
+      // Сохраняем полученные данные в поле templates
+      this.templates = response.data;
+  },
+  async mounted() {
       setTimeout(() => {
         this.isHide = false;
       }, 200);
     }
-  }
-
+};
 </script>
 
   <style scoped>
